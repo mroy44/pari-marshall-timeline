@@ -907,20 +907,6 @@ function renderTimeline() {
       html += '<div class="tl-detail-inner">';
       html += '<p><span class="label">Location:</span> <a href="'+mapsUrl(ev.address)+'" target="_blank" rel="noopener">'+esc(ev.location)+'</a></p>';
       html += '<p><span class="label">Getting There:</span> '+esc(ev.transportNote)+'</p>';
-      /* Guest list for this event */
-      const evGuests = guestsForEvent(ev);
-      if (evGuests.length) {
-        const evDate = parseDate(ev.date);
-        html += '<div class="guest-list">';
-        html += '<div class="guest-list-title">Who\u2019s in Town ('+evGuests.length+')</div>';
-        html += '<div class="guest-chips">';
-        evGuests.forEach(g => {
-          const dep = parseDate(g.departure);
-          const isDepartDay = dep.getTime() === evDate.getTime();
-          html += '<span class="guest-chip'+(isDepartDay?' departed':'')+'">'+esc(g.name)+(isDepartDay?' (departing)':'')+'</span>';
-        });
-        html += '</div></div>';
-      }
       html += '</div></div></div>';
     });
     html += '</div></div>';

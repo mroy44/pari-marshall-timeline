@@ -440,6 +440,21 @@ body{
 }
 .guest-checks .no-guests-msg{font-size:.82rem;color:#999;font-style:italic}
 
+/* ─── Guest-check accordions ─── */
+.gc-group{border:1px solid #e8e4ec;border-radius:6px;margin-bottom:.35rem;overflow:hidden}
+.gc-group-header{
+  display:flex;align-items:center;gap:.35rem;
+  padding:.4rem .65rem;background:#f8f6fa;
+  cursor:pointer;user-select:none;transition:background .15s;
+}
+.gc-group-header:hover{background:#f0ecf4}
+.gc-chevron{font-size:.65rem;transition:transform .2s;color:var(--deep-purple)}
+.gc-group.collapsed .gc-chevron{transform:rotate(-90deg)}
+.gc-group-name{font-size:.8rem;font-weight:600;color:var(--deep-purple)}
+.gc-group-count{font-size:.68rem;color:#999;margin-left:auto}
+.gc-group-body{padding:.35rem .6rem .45rem;display:flex;flex-wrap:wrap;gap:.5rem .8rem}
+.gc-group.collapsed .gc-group-body{display:none}
+
 .preview-label{
   text-align:center;font-family:'Playfair Display',serif;
   font-size:1rem;color:var(--deep-purple);
@@ -1086,6 +1101,54 @@ function toggleGroupChecks(containerId, groupName) {
       if (idsInGroup.includes(cb.value)) cb.checked = !cb.checked;
     });
   }
+  updateAccordionCounts(containerId);
+}
+function updateAccordionCounts(containerId) {
+  document.querySelectorAll('#'+containerId+' .gc-group').forEach(el => {
+    const boxes = el.querySelectorAll('input[type="checkbox"]');
+    const sel = Array.from(boxes).filter(cb => cb.checked).length;
+    const countEl = el.querySelector('.gc-group-count');
+    if (countEl) countEl.textContent = sel+'/'+boxes.length+' selected';
+  });
+}
+function buildGuestAccordions(selectedIds, showVeg) {
+  let html = '';
+  const orderedGroups = [...groups];
+  const ungrouped = guests.filter(g => !g.group);
+  orderedGroups.forEach(grp => {
+    const members = guests.filter(g => g.group === grp).sort((a,b) => a.name.localeCompare(b.name));
+    if (members.length === 0) return;
+    const selCount = members.filter(g => selectedIds.includes(g.id)).length;
+    html += '<div class="gc-group">';
+    html += '<div class="gc-group-header" onclick="this.parentElement.classList.toggle(\'collapsed\')">';
+    html += '<span class="gc-chevron">&#x25BE;</span>';
+    html += '<span class="gc-group-name">'+esc(grp)+'</span>';
+    html += '<span class="gc-group-count">'+selCount+'/'+members.length+' selected</span>';
+    html += '</div><div class="gc-group-body">';
+    members.forEach(g => {
+      const checked = selectedIds.includes(g.id) ? 'checked' : '';
+      const veg = (showVeg && g.vegetarian) ? ' (veg)' : '';
+      html += '<label><input type="checkbox" value="'+esc(g.id)+'" '+checked+' onchange="updateAccordionCounts(this.closest(\'.guest-checks\').id)"> '+esc(g.name)+veg+'</label>';
+    });
+    html += '</div></div>';
+  });
+  if (ungrouped.length > 0) {
+    const sorted = ungrouped.sort((a,b) => a.name.localeCompare(b.name));
+    const selCount = sorted.filter(g => selectedIds.includes(g.id)).length;
+    html += '<div class="gc-group">';
+    html += '<div class="gc-group-header" onclick="this.parentElement.classList.toggle(\'collapsed\')">';
+    html += '<span class="gc-chevron">&#x25BE;</span>';
+    html += '<span class="gc-group-name" style="color:#999;font-style:italic">Ungrouped</span>';
+    html += '<span class="gc-group-count">'+selCount+'/'+sorted.length+' selected</span>';
+    html += '</div><div class="gc-group-body">';
+    sorted.forEach(g => {
+      const checked = selectedIds.includes(g.id) ? 'checked' : '';
+      const veg = (showVeg && g.vegetarian) ? ' (veg)' : '';
+      html += '<label><input type="checkbox" value="'+esc(g.id)+'" '+checked+' onchange="updateAccordionCounts(this.closest(\'.guest-checks\').id)"> '+esc(g.name)+veg+'</label>';
+    });
+    html += '</div></div>';
+  }
+  return html;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -1106,12 +1169,14 @@ function renderFormGuestChecks(selectedGuestIds) {
       html += '<button type="button" class="bulk-group-btn" onclick="toggleGroupChecks(\'formGuestChecks\',\''+esc(grp)+'\')">'+esc(grp)+'</button>';
     });
     html += '</div>';
+    html += buildGuestAccordions(selectedGuestIds, false);
+  } else {
+    const sorted = [...guests].sort((a,b) => a.name.localeCompare(b.name));
+    html += sorted.map(g => {
+      const checked = selectedGuestIds.includes(g.id) ? 'checked' : '';
+      return '<label><input type="checkbox" value="'+esc(g.id)+'" '+checked+'> '+esc(g.name)+'</label>';
+    }).join('');
   }
-  const sorted = [...guests].sort((a,b) => a.name.localeCompare(b.name));
-  html += sorted.map(g => {
-    const checked = selectedGuestIds.includes(g.id) ? 'checked' : '';
-    return '<label><input type="checkbox" value="'+esc(g.id)+'" '+checked+'> '+esc(g.name)+'</label>';
-  }).join('');
   container.innerHTML = html;
 }
 
@@ -1217,13 +1282,15 @@ function renderResGuestChecks(selectedIds) {
       html += '<button type="button" class="bulk-group-btn" onclick="toggleGroupChecks(\'resGuestChecks\',\''+esc(grp)+'\')">'+esc(grp)+'</button>';
     });
     html += '</div>';
+    html += buildGuestAccordions(selectedIds, true);
+  } else {
+    const sorted = [...guests].sort((a,b) => a.name.localeCompare(b.name));
+    html += sorted.map(g => {
+      const checked = selectedIds.includes(g.id) ? 'checked' : '';
+      const veg = g.vegetarian ? ' (veg)' : '';
+      return '<label><input type="checkbox" value="'+esc(g.id)+'" '+checked+'> '+esc(g.name)+veg+'</label>';
+    }).join('');
   }
-  const sorted = [...guests].sort((a,b) => a.name.localeCompare(b.name));
-  html += sorted.map(g => {
-    const checked = selectedIds.includes(g.id) ? 'checked' : '';
-    const veg = g.vegetarian ? ' (veg)' : '';
-    return '<label><input type="checkbox" value="'+esc(g.id)+'" '+checked+'> '+esc(g.name)+veg+'</label>';
-  }).join('');
   container.innerHTML = html;
 }
 function getResCheckedGuests() {

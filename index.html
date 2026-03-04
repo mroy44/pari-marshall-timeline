@@ -695,6 +695,7 @@ let editingGuestId = null;
 let editingResId = null;
 let activeEventId = null;
 let usingFallback = false;
+let collapsedAdminGroups = new Set(); /* Tracks which admin guest groups are collapsed */
 
 /* ══════════════════════════════════════════════════════════════
    JSONBIN
@@ -933,8 +934,9 @@ function renderAdmin() {
     groups.forEach(grp => {
       const members = guests.filter(g => g.group === grp).sort((a,b) => a.name.localeCompare(b.name));
       if (members.length === 0) return;
-      h += '<div class="ag-group">';
-      h += '<div class="ag-group-header" onclick="this.parentElement.classList.toggle(\'collapsed\')">';
+      const col = collapsedAdminGroups.has(grp) ? ' collapsed' : '';
+      h += '<div class="ag-group'+col+'">';
+      h += '<div class="ag-group-header" onclick="toggleAdminGroup(this,\''+esc(grp)+'\')">';
       h += '<span class="ag-group-chevron">&#x25BE;</span>';
       h += '<span class="ag-group-name">'+esc(grp)+'</span>';
       h += '<span class="ag-group-count">'+members.length+' guest'+(members.length!==1?'s':'')+'</span>';
@@ -944,8 +946,9 @@ function renderAdmin() {
     });
     const ungrouped = guests.filter(g => !g.group).sort((a,b) => a.name.localeCompare(b.name));
     if (ungrouped.length > 0) {
-      h += '<div class="ag-group">';
-      h += '<div class="ag-group-header" onclick="this.parentElement.classList.toggle(\'collapsed\')">';
+      const col = collapsedAdminGroups.has('__ungrouped__') ? ' collapsed' : '';
+      h += '<div class="ag-group'+col+'">';
+      h += '<div class="ag-group-header" onclick="toggleAdminGroup(this,\'__ungrouped__\')">';
       h += '<span class="ag-group-chevron">&#x25BE;</span>';
       h += '<span class="ag-group-name" style="color:#999;font-style:italic">Ungrouped</span>';
       h += '<span class="ag-group-count">'+ungrouped.length+' guest'+(ungrouped.length!==1?'s':'')+'</span>';
@@ -1139,6 +1142,12 @@ function deleteGroup(i) {
   guests.forEach(g => { if (g.group === name) g.group = ''; });
   renderAll();
   saveToJsonBin();
+}
+function toggleAdminGroup(headerEl, key) {
+  const group = headerEl.parentElement;
+  group.classList.toggle('collapsed');
+  if (group.classList.contains('collapsed')) collapsedAdminGroups.add(key);
+  else collapsedAdminGroups.delete(key);
 }
 function populateGroupDropdown(selectedGroup) {
   const sel = document.getElementById('gGroup');

@@ -311,7 +311,44 @@ body{
   font-size:.7rem;font-weight:600;color:#4a9a5b;margin-left:.4rem;
 }
 .ag-veg svg{flex-shrink:0}
+.ag-tags{display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.25rem}
+.ag-tag{
+  font-size:.65rem;font-weight:600;padding:.12rem .4rem;
+  border-radius:10px;background:#e8e4f0;color:#6A3D9A;
+}
 .ag-actions{display:flex;gap:.3rem;flex-shrink:0}
+
+/* ─── Groups section ─── */
+.groups-grid{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.6rem}
+.group-chip{
+  display:inline-flex;align-items:center;gap:.3rem;
+  font-size:.8rem;font-weight:600;padding:.3rem .7rem;
+  border-radius:16px;background:#fff;color:var(--deep-purple);
+  border:1.5px solid var(--lavender);
+}
+.group-chip .group-delete{
+  cursor:pointer;font-size:.7rem;color:#c44;opacity:.6;
+  transition:opacity .15s;line-height:1;
+}
+.group-chip .group-delete:hover{opacity:1}
+.add-group-row{
+  display:flex;gap:.4rem;align-items:center;margin-top:.4rem;
+}
+.add-group-row input{
+  flex:1;padding:.4rem .6rem;border:1.5px solid #ddd;border-radius:6px;
+  font-family:'Lato',sans-serif;font-size:.82rem;
+}
+.add-group-row input:focus{outline:none;border-color:var(--lavender)}
+
+/* ─── Bulk group buttons in forms ─── */
+.bulk-group-bar{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.4rem}
+.bulk-group-btn{
+  font-size:.72rem;font-weight:600;padding:.2rem .55rem;
+  border-radius:12px;border:1.5px solid var(--lavender);
+  background:#fff;color:var(--deep-purple);cursor:pointer;
+  transition:background .15s;
+}
+.bulk-group-btn:hover{background:var(--light-lavender)}
 
 /* ─── Reservation cards ─── */
 .admin-reservations{display:flex;flex-direction:column;gap:.6rem}
@@ -534,6 +571,12 @@ body{
         Vegetarian
       </label>
     </div>
+    <div class="field">
+      <label for="gGroup">Group</label>
+      <select id="gGroup" style="width:100%;padding:.5rem .7rem;border:1.5px solid #ddd;border-radius:6px;font-family:'Lato',sans-serif;font-size:.88rem;background:#fff;cursor:pointer">
+        <option value="">— No group —</option>
+      </select>
+    </div>
     <div class="form-actions">
       <button class="btn btn-secondary" onclick="closeGuestForm()">Cancel</button>
       <button class="btn btn-primary" onclick="saveGuestForm()">Save</button>
@@ -616,6 +659,7 @@ const guestCode = params.get('guest'); /* null = show all events */
 let events = [];
 let guests = [];
 let reservations = [];
+let groups = []; /* Array of strings, e.g. ["Family", "Friends"] */
 let editingId = null;
 let editingGuestId = null;
 let editingResId = null;
@@ -639,11 +683,13 @@ async function fetchEvents() {
       events = record.map(e => ({ ...e, guestList: e.guestList || [] }));
       guests = [];
       reservations = [];
+      groups = [];
       if (isAdmin) await saveToJsonBin(true);
     } else {
       events = (record.events || []).map(e => ({ ...e, guestList: e.guestList || [] }));
-      guests = (record.guests || []).map(g => ({ ...g, code: g.code || randomCode(), vegetarian: g.vegetarian || false }));
+      guests = (record.guests || []).map(g => ({ ...g, code: g.code || randomCode(), vegetarian: g.vegetarian || false, group: g.group || '' }));
       reservations = record.reservations || [];
+      groups = record.groups || [];
     }
     /* Strip legacy views field from events */
     events.forEach(e => { delete e.views; });
@@ -653,6 +699,7 @@ async function fetchEvents() {
     events = JSON.parse(JSON.stringify(DEFAULT_EVENTS));
     guests = [];
     reservations = [];
+    groups = [];
     usingFallback = true;
   }
 }
@@ -663,7 +710,7 @@ async function saveToJsonBin(silent) {
     const res = await fetch(JSONBIN_API_URL, {
       method: 'PUT',
       headers: { 'Content-Type':'application/json', 'X-Master-Key': JSONBIN_API_KEY },
-      body: JSON.stringify({ events, guests, reservations })
+      body: JSON.stringify({ events, guests, reservations, groups })
     });
     if (!res.ok) throw new Error('Save failed');
     if (!silent) showToast('Saved \u2713', 'success', 2000);
@@ -812,13 +859,31 @@ function renderAdmin() {
   h += '<h2>Admin Panel</h2>';
   h += '<p class="admin-sub">Manage guests and events. Each guest gets a unique link showing only their events.</p>';
 
+  /* ─── Groups section ─── */
+  h += '<div class="admin-section-title">Guest Groups</div>';
+  h += '<div class="groups-grid">';
+  groups.forEach((grp, i) => {
+    const count = guests.filter(g => g.group === grp).length;
+    h += '<span class="group-chip">'+esc(grp)+' <span style="font-weight:400;color:#999;font-size:.7rem">('+count+')</span> <span class="group-delete" onclick="deleteGroup('+i+')">&times;</span></span>';
+  });
+  if (groups.length===0) h += '<span style="font-size:.82rem;color:#999;font-style:italic">No groups defined yet.</span>';
+  h += '</div>';
+  h += '<div class="add-group-row">';
+  h += '<input id="newGroupName" type="text" placeholder="New group name (e.g. Family)">';
+  h += '<button class="btn btn-primary btn-sm" onclick="addGroup()">Add Group</button>';
+  h += '</div>';
+
   /* ─── Guests section ─── */
-  h += '<div class="admin-section-title">Guests</div>';
+  h += '<div class="admin-section-title" style="margin-top:1.5rem">Guests</div>';
   h += '<div class="admin-bar">';
   h += '<button class="btn btn-primary btn-sm" onclick="openAddGuestForm()">&#xFF0B; Add Guest</button>';
   h += '</div>';
   h += '<div class="admin-guests">';
-  const sortedGuests = [...guests].sort((a,b) => a.name.localeCompare(b.name));
+  const sortedGuests = [...guests].sort((a,b) => {
+    /* Sort by group first, then name */
+    const ga = a.group || '\uffff', gb = b.group || '\uffff';
+    return ga.localeCompare(gb) || a.name.localeCompare(b.name);
+  });
   sortedGuests.forEach(g => {
     const evCount = events.filter(e => (e.guestList||[]).includes(g.id)).length;
     h += '<div class="admin-guest-card">';
@@ -826,6 +891,7 @@ function renderAdmin() {
     h += '<div class="ag-name">'+esc(g.name);
     if (g.vegetarian) h += '<span class="ag-veg"><svg width="12" height="12" viewBox="0 0 24 24" fill="#4a9a5b" stroke="none"><path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z"/></svg>Vegetarian</span>';
     h += '</div>';
+    if (g.group) h += '<div class="ag-tags"><span class="ag-tag">'+esc(g.group)+'</span></div>';
     h += '<div class="ag-meta">Arrives: '+esc(g.arrival)+' &mdash; Departs: '+esc(g.departure)+' &middot; '+evCount+' event'+(evCount!==1?'s':'')+'</div>';
     h += '<div class="ag-link">'+esc(guestShareUrl(g.code))+'</div>';
     h += '</div>';
@@ -919,6 +985,7 @@ function openAddGuestForm() {
   document.getElementById('gArrival').value = '';
   document.getElementById('gDeparture').value = '';
   document.getElementById('gVegetarian').checked = false;
+  populateGroupDropdown('');
   document.getElementById('guestFormOverlay').classList.add('visible');
 }
 
@@ -931,6 +998,7 @@ function openEditGuestForm(id) {
   document.getElementById('gArrival').value = g.arrival;
   document.getElementById('gDeparture').value = g.departure;
   document.getElementById('gVegetarian').checked = !!g.vegetarian;
+  populateGroupDropdown(g.group || '');
   document.getElementById('guestFormOverlay').classList.add('visible');
 }
 
@@ -944,14 +1012,15 @@ function saveGuestForm() {
   const arrival = document.getElementById('gArrival').value.trim();
   const departure = document.getElementById('gDeparture').value.trim();
   const vegetarian = document.getElementById('gVegetarian').checked;
+  const group = document.getElementById('gGroup').value;
   if (!name||!arrival||!departure) { alert('Please fill in name, arrival date, and departure date.'); return; }
   if (editingGuestId) {
     const g = guests.find(x => x.id===editingGuestId);
-    if (g) { g.name=name; g.arrival=arrival; g.departure=departure; g.vegetarian=vegetarian; }
+    if (g) { g.name=name; g.arrival=arrival; g.departure=departure; g.vegetarian=vegetarian; g.group=group; }
   } else {
     let code = randomCode();
     while (guests.some(g => g.code === code)) code = randomCode();
-    guests.push({ id:nextGuestId(), name, arrival, departure, vegetarian, code });
+    guests.push({ id:nextGuestId(), name, arrival, departure, vegetarian, code, group });
   }
   closeGuestForm();
   renderAll();
@@ -980,6 +1049,46 @@ function copyGuestLink(code) {
 }
 
 /* ══════════════════════════════════════════════════════════════
+   GROUP MANAGEMENT
+   ══════════════════════════════════════════════════════════════ */
+function addGroup() {
+  const inp = document.getElementById('newGroupName');
+  const name = inp.value.trim();
+  if (!name) return;
+  if (groups.includes(name)) { alert('Group "'+name+'" already exists.'); return; }
+  groups.push(name);
+  inp.value = '';
+  renderAll();
+  saveToJsonBin();
+}
+function deleteGroup(i) {
+  const name = groups[i];
+  if (!confirm('Delete group "'+name+'"? Guests in this group will become ungrouped.')) return;
+  groups.splice(i, 1);
+  guests.forEach(g => { if (g.group === name) g.group = ''; });
+  renderAll();
+  saveToJsonBin();
+}
+function populateGroupDropdown(selectedGroup) {
+  const sel = document.getElementById('gGroup');
+  sel.innerHTML = '<option value="">— No group —</option>' +
+    groups.map(g => '<option value="'+esc(g)+'"'+(g===selectedGroup?' selected':'')+'>'+esc(g)+'</option>').join('');
+}
+function toggleGroupChecks(containerId, groupName) {
+  const boxes = document.querySelectorAll('#'+containerId+' input[type="checkbox"]');
+  if (groupName === '__all__') {
+    boxes.forEach(cb => cb.checked = true);
+  } else if (groupName === '__none__') {
+    boxes.forEach(cb => cb.checked = false);
+  } else {
+    const idsInGroup = guests.filter(g => g.group === groupName).map(g => g.id);
+    boxes.forEach(cb => {
+      if (idsInGroup.includes(cb.value)) cb.checked = !cb.checked;
+    });
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
    EVENT FORM
    ══════════════════════════════════════════════════════════════ */
 function renderFormGuestChecks(selectedGuestIds) {
@@ -988,11 +1097,22 @@ function renderFormGuestChecks(selectedGuestIds) {
     container.innerHTML = '<span class="no-guests-msg">Add guests first to assign them to events.</span>';
     return;
   }
+  let html = '';
+  if (groups.length > 0) {
+    html += '<div class="bulk-group-bar">';
+    html += '<button type="button" class="bulk-group-btn" onclick="toggleGroupChecks(\'formGuestChecks\',\'__all__\')">All</button>';
+    html += '<button type="button" class="bulk-group-btn" onclick="toggleGroupChecks(\'formGuestChecks\',\'__none__\')">None</button>';
+    groups.forEach(grp => {
+      html += '<button type="button" class="bulk-group-btn" onclick="toggleGroupChecks(\'formGuestChecks\',\''+esc(grp)+'\')">'+esc(grp)+'</button>';
+    });
+    html += '</div>';
+  }
   const sorted = [...guests].sort((a,b) => a.name.localeCompare(b.name));
-  container.innerHTML = sorted.map(g => {
+  html += sorted.map(g => {
     const checked = selectedGuestIds.includes(g.id) ? 'checked' : '';
     return '<label><input type="checkbox" value="'+esc(g.id)+'" '+checked+'> '+esc(g.name)+'</label>';
   }).join('');
+  container.innerHTML = html;
 }
 
 function getCheckedGuests() {
@@ -1071,6 +1191,7 @@ function resetData() {
   events = JSON.parse(JSON.stringify(DEFAULT_EVENTS));
   guests = [];
   reservations = [];
+  groups = [];
   activeEventId = null;
   renderAll();
   saveToJsonBin();
@@ -1087,12 +1208,23 @@ function renderResGuestChecks(selectedIds) {
     container.innerHTML = '<span class="no-guests-msg">Add guests first.</span>';
     return;
   }
+  let html = '';
+  if (groups.length > 0) {
+    html += '<div class="bulk-group-bar">';
+    html += '<button type="button" class="bulk-group-btn" onclick="toggleGroupChecks(\'resGuestChecks\',\'__all__\')">All</button>';
+    html += '<button type="button" class="bulk-group-btn" onclick="toggleGroupChecks(\'resGuestChecks\',\'__none__\')">None</button>';
+    groups.forEach(grp => {
+      html += '<button type="button" class="bulk-group-btn" onclick="toggleGroupChecks(\'resGuestChecks\',\''+esc(grp)+'\')">'+esc(grp)+'</button>';
+    });
+    html += '</div>';
+  }
   const sorted = [...guests].sort((a,b) => a.name.localeCompare(b.name));
-  container.innerHTML = sorted.map(g => {
+  html += sorted.map(g => {
     const checked = selectedIds.includes(g.id) ? 'checked' : '';
     const veg = g.vegetarian ? ' (veg)' : '';
     return '<label><input type="checkbox" value="'+esc(g.id)+'" '+checked+'> '+esc(g.name)+veg+'</label>';
   }).join('');
+  container.innerHTML = html;
 }
 function getResCheckedGuests() {
   const boxes = document.querySelectorAll('#resGuestChecks input[type="checkbox"]');

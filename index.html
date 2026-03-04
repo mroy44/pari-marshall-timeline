@@ -212,6 +212,17 @@ body{
 }
 .tl-detail-inner a:hover{color:#8b5fc7}
 
+/* ─── Guest list inside event detail ─── */
+.guest-list{margin-top:.6rem;padding-top:.5rem;border-top:1px dashed var(--light-lavender)}
+.guest-list-title{font-size:.78rem;font-weight:600;color:var(--deep-purple);margin-bottom:.3rem}
+.guest-chips{display:flex;flex-wrap:wrap;gap:.3rem}
+.guest-chip{
+  font-size:.72rem;font-weight:500;padding:.18rem .5rem;
+  border-radius:12px;background:var(--light-lavender);color:var(--deep-purple);
+  white-space:nowrap;
+}
+.guest-chip.departed{opacity:.45;text-decoration:line-through}
+
 /* ════════════════════════════════
    CONTACT BAR
    ════════════════════════════════ */
@@ -272,36 +283,55 @@ body{
 .btn-danger:hover{background:#c43c3c}
 .btn-sm{padding:.35rem .7rem;font-size:.78rem}
 
-/* ─── Views section ─── */
+/* ─── Section titles ─── */
 .admin-section-title{
   font-family:'Playfair Display',serif;
   font-size:1.05rem;color:var(--deep-purple);
   margin:1.2rem 0 .6rem;
   padding-bottom:.3rem;border-bottom:1px solid var(--light-lavender);
 }
-.views-grid{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem}
-.view-card{
+
+/* ─── Admin guest section ─── */
+.admin-guests{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem}
+.admin-guest-card{
   background:#fff;border-radius:8px;padding:.7rem .9rem;
   box-shadow:0 1px 4px rgba(0,0,0,.05);border:1px solid #e8e4ec;
   display:flex;align-items:center;justify-content:space-between;
   gap:.5rem;flex-wrap:wrap;
 }
-.view-info{flex:1;min-width:0}
-.view-name{font-weight:600;font-size:.9rem;color:var(--charcoal)}
-.view-meta{font-size:.75rem;color:#999;margin-top:.1rem}
-.view-link{
+.ag-info{flex:1;min-width:0}
+.ag-name{font-weight:600;font-size:.9rem;color:var(--charcoal)}
+.ag-meta{font-size:.75rem;color:#999;margin-top:.1rem}
+.ag-link{
   font-size:.72rem;color:var(--deep-purple);
   word-break:break-all;display:block;margin-top:.15rem;
 }
-.view-actions{display:flex;gap:.3rem;flex-shrink:0}
-.add-view-row{
-  display:flex;gap:.4rem;align-items:center;margin-top:.5rem;
+.ag-veg{
+  display:inline-flex;align-items:center;gap:.2rem;
+  font-size:.7rem;font-weight:600;color:#4a9a5b;margin-left:.4rem;
 }
-.add-view-row input{
-  flex:1;padding:.4rem .6rem;border:1.5px solid #ddd;border-radius:6px;
-  font-family:'Lato',sans-serif;font-size:.82rem;
+.ag-veg svg{flex-shrink:0}
+.ag-actions{display:flex;gap:.3rem;flex-shrink:0}
+
+/* ─── Reservation cards ─── */
+.admin-reservations{display:flex;flex-direction:column;gap:.6rem}
+.admin-res-card{
+  background:#fff;border-radius:8px;padding:.9rem 1rem;
+  box-shadow:0 1px 5px rgba(0,0,0,.05);border:1px solid #e8e4ec;
 }
-.add-view-row input:focus{outline:none;border-color:var(--lavender)}
+.ar-top{display:flex;justify-content:space-between;align-items:flex-start;gap:.6rem;flex-wrap:wrap}
+.ar-name{font-family:'Playfair Display',serif;font-weight:600;font-size:1rem;color:var(--charcoal)}
+.ar-meta{font-size:.8rem;color:#777;margin-top:.2rem;line-height:1.45}
+.ar-actions{display:flex;gap:.35rem;flex-shrink:0}
+.ar-tags{display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.35rem}
+.ar-tag{
+  font-size:.68rem;font-weight:600;padding:.15rem .5rem;border-radius:10px;
+  background:var(--light-lavender);color:var(--deep-purple);
+}
+.ar-veg-count{
+  font-size:.68rem;font-weight:600;padding:.15rem .5rem;border-radius:10px;
+  background:#e0f0e4;color:#3d7a4a;
+}
 
 /* ─── Event cards ─── */
 .admin-events{display:flex;flex-direction:column;gap:.6rem}
@@ -313,7 +343,7 @@ body{
 .ae-name{font-family:'Playfair Display',serif;font-weight:600;font-size:1rem;color:var(--charcoal)}
 .ae-meta{font-size:.8rem;color:#777;margin-top:.2rem;line-height:1.45}
 .ae-actions{display:flex;gap:.35rem;flex-shrink:0}
-/* View tags on event cards */
+/* Guest tags on event cards */
 .ae-tags{display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.35rem}
 .ae-tag{
   font-size:.68rem;font-weight:600;
@@ -362,15 +392,16 @@ body{
 .admin-form textarea:focus{outline:none;border-color:var(--lavender);box-shadow:0 0 0 3px rgba(180,151,214,.2)}
 .admin-form textarea{resize:vertical;min-height:55px}
 .admin-form .form-actions{display:flex;gap:.5rem;margin-top:1rem;justify-content:flex-end}
-/* View checkboxes in form */
-.views-checks{display:flex;flex-wrap:wrap;gap:.5rem .8rem;margin-top:.3rem}
-.views-checks label{
+/* Guest checkboxes in event form */
+.guest-checks{display:flex;flex-wrap:wrap;gap:.5rem .8rem;margin-top:.3rem}
+.guest-checks label{
   display:flex;align-items:center;gap:.3rem;
   font-size:.82rem;font-weight:400;color:var(--charcoal);cursor:pointer;
 }
-.views-checks input[type="checkbox"]{
+.guest-checks input[type="checkbox"]{
   accent-color:var(--deep-purple);width:15px;height:15px;cursor:pointer;
 }
+.guest-checks .no-guests-msg{font-size:.82rem;color:#999;font-style:italic}
 
 .preview-label{
   text-align:center;font-family:'Playfair Display',serif;
@@ -399,7 +430,7 @@ body{
   .tl-detail-inner::after{width:25px;height:42px;opacity:.08}
   .date-group-header{font-size:1rem}
   .admin-form{padding:1.2rem}
-  .view-card{flex-direction:column;align-items:flex-start}
+  .admin-guest-card{flex-direction:column;align-items:flex-start}
 }
 </style>
 </head>
@@ -442,7 +473,7 @@ body{
 
 <div class="toast" id="toast"></div>
 
-<!-- Admin form modal -->
+<!-- Event form modal -->
 <div class="admin-form-overlay" id="formOverlay">
   <div class="admin-form">
     <h3 id="formTitle">Add Event</h3>
@@ -471,12 +502,84 @@ body{
       <textarea id="fTransport" placeholder="Parking info, rideshare tips, etc."></textarea>
     </div>
     <div class="field">
-      <label>Show in timelines</label>
-      <div class="views-checks" id="formViewChecks"></div>
+      <label>Guest List</label>
+      <div class="guest-checks" id="formGuestChecks"></div>
     </div>
     <div class="form-actions">
       <button class="btn btn-secondary" onclick="closeForm()">Cancel</button>
       <button class="btn btn-primary" onclick="saveForm()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Guest form modal -->
+<div class="admin-form-overlay" id="guestFormOverlay">
+  <div class="admin-form">
+    <h3 id="guestFormTitle">Add Guest</h3>
+    <div class="field">
+      <label for="gName">Guest Name</label>
+      <input id="gName" type="text" placeholder="e.g. Jane Smith">
+    </div>
+    <div class="field">
+      <label for="gArrival">Arrival Date (MM/DD/YYYY)</label>
+      <input id="gArrival" type="text" placeholder="03/12/2026">
+    </div>
+    <div class="field">
+      <label for="gDeparture">Departure Date (MM/DD/YYYY)</label>
+      <input id="gDeparture" type="text" placeholder="03/15/2026">
+    </div>
+    <div class="field">
+      <label style="display:flex;align-items:center;gap:.4rem;cursor:pointer;font-weight:400;font-size:.88rem">
+        <input id="gVegetarian" type="checkbox" style="accent-color:#4a9a5b;width:16px;height:16px;cursor:pointer">
+        Vegetarian
+      </label>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-secondary" onclick="closeGuestForm()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveGuestForm()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Reservation form modal -->
+<div class="admin-form-overlay" id="resFormOverlay">
+  <div class="admin-form">
+    <h3 id="resFormTitle">Add Reservation</h3>
+    <div class="field">
+      <label for="rRestaurant">Restaurant Name</label>
+      <input id="rRestaurant" type="text" placeholder="e.g. Saba">
+    </div>
+    <div class="field">
+      <label for="rDate">Date (MM/DD/YYYY)</label>
+      <input id="rDate" type="text" placeholder="03/12/2026">
+    </div>
+    <div class="field">
+      <label for="rTime">Time</label>
+      <input id="rTime" type="text" placeholder="7:00 PM">
+    </div>
+    <div class="field">
+      <label for="rPartySize">Party Size</label>
+      <input id="rPartySize" type="number" min="1" placeholder="8">
+    </div>
+    <div class="field">
+      <label for="rConfirmation">Confirmation #</label>
+      <input id="rConfirmation" type="text" placeholder="e.g. CONF-12345">
+    </div>
+    <div class="field">
+      <label for="rPhone">Contact Phone</label>
+      <input id="rPhone" type="text" placeholder="e.g. 504-555-1234">
+    </div>
+    <div class="field">
+      <label for="rNotes">Notes</label>
+      <textarea id="rNotes" placeholder="Any special requests, seating preferences, etc."></textarea>
+    </div>
+    <div class="field">
+      <label>Guests</label>
+      <div class="guest-checks" id="resGuestChecks"></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-secondary" onclick="closeResForm()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveResForm()">Save</button>
     </div>
   </div>
 </div>
@@ -493,27 +596,29 @@ const JSONBIN_API_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
    DEFAULT DATA (fallback)
    ══════════════════════════════════════════════════════════════ */
 const DEFAULT_EVENTS = [
-  { id:"evt1", name:"Pari's Dissertation Defense", date:"03/12/2026", time:"11:00 AM", location:"Hutchinson Memorial Building", address:"Hutchinson Memorial Building, New Orleans, LA", transportNote:"Street parking and garage available near Hutchinson Memorial Building.", views:["everyone"] },
-  { id:"evt2", name:"Dissertation Lunch", date:"03/12/2026", time:"12:00 PM", location:"Olive", address:"Olive Restaurant, New Orleans, LA", transportNote:"Walking distance from the defense venue. Street parking available.", views:["everyone"] },
-  { id:"evt3", name:"Dissertation Dinner", date:"03/12/2026", time:"4:00 PM", location:"Saba", address:"Saba Restaurant, New Orleans, LA", transportNote:"Street parking and valet available at Saba.", views:["everyone"] },
-  { id:"evt4", name:"Marriage Ceremony", date:"03/13/2026", time:"10:30 AM", location:"Four Winds Apartments - New Orleans", address:"210 Baronne St, New Orleans, LA 70112", transportNote:"Parking available at Four Winds Apartments complex.", views:["everyone"] },
-  { id:"evt5", name:"Marriage Ceremony Brunch", date:"03/13/2026", time:"11:30 AM", location:"Thaihey NOLA", address:"Thaihey NOLA, New Orleans, LA", transportNote:"Short drive from Four Winds. Street parking available near Thaihey NOLA.", views:["everyone"] },
-  { id:"evt6", name:"St Patty's Day Parade", date:"03/14/2026", time:"1:00 PM", location:"Hot Tin", address:"The Pontchartrain Hotel, New Orleans, LA", transportNote:"Rideshare recommended — parade route may affect street access. Hot Tin is at The Pontchartrain Hotel.", views:["everyone"] },
-  { id:"evt7", name:"Engagement Party Setup", date:"03/14/2026", time:"4:00 PM", location:"Four Winds Apartments - New Orleans", address:"210 Baronne St, New Orleans, LA 70112", transportNote:"Parking available at Four Winds Apartments complex. Helpers only.", views:["everyone"] },
-  { id:"evt8", name:"Engagement Party Starts", date:"03/14/2026", time:"7:00 PM", location:"Four Winds Apartments - New Orleans", address:"210 Baronne St, New Orleans, LA 70112", transportNote:"Parking available at Four Winds Apartments complex. Rideshare also recommended — 210 Baronne St, New Orleans, LA 70112.", views:["everyone"] },
-  { id:"evt9", name:"Engagement Party Ends", date:"03/14/2026", time:"10:30 PM", location:"Four Winds Apartments - New Orleans", address:"210 Baronne St, New Orleans, LA 70112", transportNote:"Rideshare recommended for departure.", views:["everyone"] }
+  { id:"evt1", name:"Pari's Dissertation Defense", date:"03/12/2026", time:"11:00 AM", location:"Hutchinson Memorial Building", address:"Hutchinson Memorial Building, New Orleans, LA", transportNote:"Street parking and garage available near Hutchinson Memorial Building.", guestList:[] },
+  { id:"evt2", name:"Dissertation Lunch", date:"03/12/2026", time:"12:00 PM", location:"Olive", address:"Olive Restaurant, New Orleans, LA", transportNote:"Walking distance from the defense venue. Street parking available.", guestList:[] },
+  { id:"evt3", name:"Dissertation Dinner", date:"03/12/2026", time:"4:00 PM", location:"Saba", address:"Saba Restaurant, New Orleans, LA", transportNote:"Street parking and valet available at Saba.", guestList:[] },
+  { id:"evt4", name:"Marriage Ceremony", date:"03/13/2026", time:"10:30 AM", location:"Four Winds Apartments - New Orleans", address:"210 Baronne St, New Orleans, LA 70112", transportNote:"Parking available at Four Winds Apartments complex.", guestList:[] },
+  { id:"evt5", name:"Marriage Ceremony Brunch", date:"03/13/2026", time:"11:30 AM", location:"Thaihey NOLA", address:"Thaihey NOLA, New Orleans, LA", transportNote:"Short drive from Four Winds. Street parking available near Thaihey NOLA.", guestList:[] },
+  { id:"evt6", name:"St Patty's Day Parade", date:"03/14/2026", time:"1:00 PM", location:"Hot Tin", address:"The Pontchartrain Hotel, New Orleans, LA", transportNote:"Rideshare recommended — parade route may affect street access. Hot Tin is at The Pontchartrain Hotel.", guestList:[] },
+  { id:"evt7", name:"Engagement Party Setup", date:"03/14/2026", time:"4:00 PM", location:"Four Winds Apartments - New Orleans", address:"210 Baronne St, New Orleans, LA 70112", transportNote:"Parking available at Four Winds Apartments complex. Helpers only.", guestList:[] },
+  { id:"evt8", name:"Engagement Party Starts", date:"03/14/2026", time:"7:00 PM", location:"Four Winds Apartments - New Orleans", address:"210 Baronne St, New Orleans, LA 70112", transportNote:"Parking available at Four Winds Apartments complex. Rideshare also recommended — 210 Baronne St, New Orleans, LA 70112.", guestList:[] },
+  { id:"evt9", name:"Engagement Party Ends", date:"03/14/2026", time:"10:30 PM", location:"Four Winds Apartments - New Orleans", address:"210 Baronne St, New Orleans, LA 70112", transportNote:"Rideshare recommended for departure.", guestList:[] }
 ];
-const DEFAULT_VIEWS = [{ id:"everyone", name:"Everyone" }];
 
 /* ══════════════════════════════════════════════════════════════
    STATE
    ══════════════════════════════════════════════════════════════ */
 const params = new URLSearchParams(window.location.search);
 const isAdmin = params.get('admin') === 'true';
-const guestView = params.get('view'); /* null = show all */
+const guestCode = params.get('guest'); /* null = show all events */
 let events = [];
-let views = [];
+let guests = [];
+let reservations = [];
 let editingId = null;
+let editingGuestId = null;
+let editingResId = null;
 let activeEventId = null;
 let usingFallback = false;
 
@@ -529,21 +634,25 @@ async function fetchEvents() {
     const data = await res.json();
     const record = data.record;
 
-    /* Migration: old format was a plain array */
+    /* Migration: old format was a plain array or had views */
     if (Array.isArray(record)) {
-      events = record.map(e => ({ ...e, views: e.views || ["everyone"] }));
-      views = [{ id:"everyone", name:"Everyone" }];
-      /* Save migrated format back */
+      events = record.map(e => ({ ...e, guestList: e.guestList || [] }));
+      guests = [];
+      reservations = [];
       if (isAdmin) await saveToJsonBin(true);
     } else {
-      views = record.views || [{ id:"everyone", name:"Everyone" }];
-      events = (record.events || []).map(e => ({ ...e, views: e.views || ["everyone"] }));
+      events = (record.events || []).map(e => ({ ...e, guestList: e.guestList || [] }));
+      guests = (record.guests || []).map(g => ({ ...g, code: g.code || randomCode(), vegetarian: g.vegetarian || false }));
+      reservations = record.reservations || [];
     }
+    /* Strip legacy views field from events */
+    events.forEach(e => { delete e.views; });
     usingFallback = false;
   } catch (e) {
     console.warn('JSONBin fetch failed, using defaults:', e);
     events = JSON.parse(JSON.stringify(DEFAULT_EVENTS));
-    views = JSON.parse(JSON.stringify(DEFAULT_VIEWS));
+    guests = [];
+    reservations = [];
     usingFallback = true;
   }
 }
@@ -554,7 +663,7 @@ async function saveToJsonBin(silent) {
     const res = await fetch(JSONBIN_API_URL, {
       method: 'PUT',
       headers: { 'Content-Type':'application/json', 'X-Master-Key': JSONBIN_API_KEY },
-      body: JSON.stringify({ views, events })
+      body: JSON.stringify({ events, guests, reservations })
     });
     if (!res.ok) throw new Error('Save failed');
     if (!silent) showToast('Saved \u2713', 'success', 2000);
@@ -596,21 +705,39 @@ function sortEvents(a){ return a.sort((x,y)=>{ const dx=parseDate(x.date),dy=par
 function isEventPast(ev){ const d=parseDate(ev.date); const m=parseTime(ev.time); d.setHours(Math.floor(m/60),m%60,0,0); return new Date()>d; }
 function mapsUrl(a){ return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(a); }
 function nextId(){ return 'evt'+(Math.max(0,...events.map(e=>{const m=e.id.match(/\d+/);return m?+m[0]:0}))+1); }
+function nextGuestId(){ return 'g'+(Math.max(0,...guests.map(g=>{const m=g.id.match(/\d+/);return m?+m[0]:0}))+1); }
 function randomCode(){ const c='abcdefghijklmnopqrstuvwxyz0123456789'; let s=''; for(let i=0;i<6;i++) s+=c[Math.floor(Math.random()*c.length)]; return s; }
-function shareUrl(viewId){
+function guestShareUrl(code){
   const base = window.location.origin + window.location.pathname;
-  return base + '?view=' + encodeURIComponent(viewId);
+  return base + '?guest=' + encodeURIComponent(code);
 }
+function findGuestByCode(code){ return guests.find(g => g.code === code); }
 
 /* ══════════════════════════════════════════════════════════════
    RENDER GUEST TIMELINE
    ══════════════════════════════════════════════════════════════ */
 function getFilteredEvents() {
   let list = [...events];
-  if (guestView && !isAdmin) {
-    list = list.filter(ev => ev.views && ev.views.includes(guestView));
+  if (guestCode && !isAdmin) {
+    const g = findGuestByCode(guestCode);
+    if (g) {
+      list = list.filter(ev => (ev.guestList || []).includes(g.id));
+    } else {
+      list = []; /* unknown guest code — show nothing */
+    }
   }
   return sortEvents(list);
+}
+
+/* Get guests on an event's guest list who are in town on that date */
+function guestsForEvent(ev) {
+  const evDate = parseDate(ev.date);
+  return (ev.guestList || []).map(gid => guests.find(g => g.id === gid)).filter(g => {
+    if (!g) return false;
+    const arr = parseDate(g.arrival);
+    const dep = parseDate(g.departure);
+    return evDate >= arr && evDate <= dep;
+  });
 }
 
 function renderTimeline() {
@@ -641,6 +768,20 @@ function renderTimeline() {
       html += '<div class="tl-detail-inner">';
       html += '<p><span class="label">Location:</span> <a href="'+mapsUrl(ev.address)+'" target="_blank" rel="noopener">'+esc(ev.location)+'</a></p>';
       html += '<p><span class="label">Getting There:</span> '+esc(ev.transportNote)+'</p>';
+      /* Guest list for this event */
+      const evGuests = guestsForEvent(ev);
+      if (evGuests.length) {
+        const evDate = parseDate(ev.date);
+        html += '<div class="guest-list">';
+        html += '<div class="guest-list-title">Who\u2019s in Town ('+evGuests.length+')</div>';
+        html += '<div class="guest-chips">';
+        evGuests.forEach(g => {
+          const dep = parseDate(g.departure);
+          const isDepartDay = dep.getTime() === evDate.getTime();
+          html += '<span class="guest-chip'+(isDepartDay?' departed':'')+'">'+esc(g.name)+(isDepartDay?' (departing)':'')+'</span>';
+        });
+        html += '</div></div>';
+      }
       html += '</div></div></div>';
     });
     html += '</div></div>';
@@ -669,30 +810,67 @@ function renderAdmin() {
 
   let h = '<div class="admin-panel"><div class="admin-inner">';
   h += '<h2>Admin Panel</h2>';
-  h += '<p class="admin-sub">Manage events and timeline views. Changes save to the cloud.</p>';
+  h += '<p class="admin-sub">Manage guests and events. Each guest gets a unique link showing only their events.</p>';
 
-  /* ─── Views section ─── */
-  h += '<div class="admin-section-title">Timeline Views</div>';
-  h += '<div class="views-grid">';
-  views.forEach(v => {
-    const count = events.filter(e => e.views && e.views.includes(v.id)).length;
-    h += '<div class="view-card">';
-    h += '<div class="view-info">';
-    h += '<div class="view-name">'+esc(v.name)+'</div>';
-    h += '<div class="view-meta">'+count+' event'+(count!==1?'s':'')+' &middot; ID: '+esc(v.id)+'</div>';
-    h += '<div class="view-link">'+esc(shareUrl(v.id))+'</div>';
+  /* ─── Guests section ─── */
+  h += '<div class="admin-section-title">Guests</div>';
+  h += '<div class="admin-bar">';
+  h += '<button class="btn btn-primary btn-sm" onclick="openAddGuestForm()">&#xFF0B; Add Guest</button>';
+  h += '</div>';
+  h += '<div class="admin-guests">';
+  const sortedGuests = [...guests].sort((a,b) => a.name.localeCompare(b.name));
+  sortedGuests.forEach(g => {
+    const evCount = events.filter(e => (e.guestList||[]).includes(g.id)).length;
+    h += '<div class="admin-guest-card">';
+    h += '<div class="ag-info">';
+    h += '<div class="ag-name">'+esc(g.name);
+    if (g.vegetarian) h += '<span class="ag-veg"><svg width="12" height="12" viewBox="0 0 24 24" fill="#4a9a5b" stroke="none"><path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z"/></svg>Vegetarian</span>';
     h += '</div>';
-    h += '<div class="view-actions">';
-    h += '<button class="btn btn-secondary btn-sm" onclick="copyViewLink(\''+esc(v.id)+'\')">Copy Link</button>';
-    if (views.length > 1) {
-      h += '<button class="btn btn-danger btn-sm" onclick="deleteView(\''+esc(v.id)+'\')">Delete</button>';
-    }
+    h += '<div class="ag-meta">Arrives: '+esc(g.arrival)+' &mdash; Departs: '+esc(g.departure)+' &middot; '+evCount+' event'+(evCount!==1?'s':'')+'</div>';
+    h += '<div class="ag-link">'+esc(guestShareUrl(g.code))+'</div>';
+    h += '</div>';
+    h += '<div class="ag-actions">';
+    h += '<button class="btn btn-secondary btn-sm" onclick="copyGuestLink(\''+esc(g.code)+'\')">Copy Link</button>';
+    h += '<button class="btn btn-secondary btn-sm" onclick="openEditGuestForm(\''+g.id+'\')">Edit</button>';
+    h += '<button class="btn btn-danger btn-sm" onclick="deleteGuest(\''+g.id+'\')">Delete</button>';
     h += '</div></div>';
   });
+  if (guests.length===0) h += '<p style="color:#999;text-align:center;padding:.6rem;font-size:.85rem">No guests added yet. Add guests first, then assign them to events.</p>';
   h += '</div>';
-  h += '<div class="add-view-row">';
-  h += '<input id="newViewName" type="text" placeholder="New view name (e.g. Family)">';
-  h += '<button class="btn btn-primary btn-sm" onclick="addView()">Add View</button>';
+
+  /* ─── Reservations section ─── */
+  h += '<div class="admin-section-title" style="margin-top:1.5rem">Restaurant Reservations</div>';
+  h += '<div class="admin-bar">';
+  h += '<button class="btn btn-primary btn-sm" onclick="openAddResForm()">&#xFF0B; Add Reservation</button>';
+  h += '</div>';
+  h += '<div class="admin-reservations">';
+  const sortedRes = [...reservations].sort((a,b) => {
+    const da = parseDate(a.date), db = parseDate(b.date);
+    return da - db || parseTime(a.time) - parseTime(b.time);
+  });
+  sortedRes.forEach(r => {
+    const vegCount = (r.guestIds||[]).reduce((n,gid) => { const g=guests.find(x=>x.id===gid); return n+(g&&g.vegetarian?1:0); }, 0);
+    h += '<div class="admin-res-card"><div class="ar-top"><div>';
+    h += '<div class="ar-name">'+esc(r.restaurant)+'</div>';
+    h += '<div class="ar-meta">'+esc(r.date)+' at '+esc(r.time)+' &middot; Party of '+esc(String(r.partySize||'?'))+'</div>';
+    if (r.confirmation) h += '<div class="ar-meta">Confirmation: <strong>'+esc(r.confirmation)+'</strong></div>';
+    if (r.contactPhone) h += '<div class="ar-meta">Phone: <a href="tel:'+esc(r.contactPhone)+'" style="color:var(--deep-purple)">'+esc(r.contactPhone)+'</a></div>';
+    if (r.notes) h += '<div class="ar-meta" style="font-style:italic">'+esc(r.notes)+'</div>';
+    if ((r.guestIds||[]).length) {
+      h += '<div class="ar-tags">';
+      r.guestIds.forEach(gid => {
+        const gObj = guests.find(g => g.id === gid);
+        h += '<span class="ar-tag">'+esc(gObj ? gObj.name : gid)+'</span>';
+      });
+      if (vegCount > 0) h += '<span class="ar-veg-count">'+vegCount+' vegetarian</span>';
+      h += '</div>';
+    }
+    h += '</div><div class="ar-actions">';
+    h += '<button class="btn btn-secondary btn-sm" onclick="openEditResForm(\''+r.id+'\')">Edit</button>';
+    h += '<button class="btn btn-danger btn-sm" onclick="deleteRes(\''+r.id+'\')">Delete</button>';
+    h += '</div></div></div>';
+  });
+  if (reservations.length===0) h += '<p style="color:#999;text-align:center;padding:.6rem;font-size:.85rem">No reservations yet.</p>';
   h += '</div>';
 
   /* ─── Events section ─── */
@@ -708,14 +886,17 @@ function renderAdmin() {
     h += '<div class="ae-meta">'+esc(ev.date)+' at '+esc(ev.time)+' &mdash; '+esc(ev.location)+'</div>';
     h += '<div class="ae-meta">'+esc(ev.address)+'</div>';
     h += '<div class="ae-meta" style="font-style:italic">'+esc(ev.transportNote)+'</div>';
-    /* View tags */
-    if (ev.views && ev.views.length) {
+    /* Guest tags */
+    const gl = ev.guestList || [];
+    if (gl.length) {
       h += '<div class="ae-tags">';
-      ev.views.forEach(vid => {
-        const vObj = views.find(v => v.id === vid);
-        h += '<span class="ae-tag">'+ esc(vObj ? vObj.name : vid) +'</span>';
+      gl.forEach(gid => {
+        const gObj = guests.find(g => g.id === gid);
+        h += '<span class="ae-tag">'+ esc(gObj ? gObj.name : gid) +'</span>';
       });
       h += '</div>';
+    } else {
+      h += '<div class="ae-meta" style="color:#c9a;font-style:italic">No guests assigned</div>';
     }
     h += '</div><div class="ae-actions">';
     h += '<button class="btn btn-secondary btn-sm" onclick="openEditForm(\''+ev.id+'\')">Edit</button>';
@@ -724,37 +905,73 @@ function renderAdmin() {
   });
   if (sorted.length===0) h += '<p style="color:#999;text-align:center;padding:1rem">No events.</p>';
   h += '</div></div></div>';
-  h += '<div class="preview-label">Preview <span>What guests will see (all events)</span></div>';
+  h += '<div class="preview-label">Preview <span>What guests will see (showing all events)</span></div>';
   root.innerHTML = h;
 }
 
 /* ══════════════════════════════════════════════════════════════
-   VIEW MANAGEMENT
+   GUEST MANAGEMENT
    ══════════════════════════════════════════════════════════════ */
-function addView() {
-  const input = document.getElementById('newViewName');
-  const name = input.value.trim();
-  if (!name) { input.focus(); return; }
-  let id = randomCode();
-  while (views.some(v => v.id === id)) id = randomCode();
-  views.push({ id, name });
+function openAddGuestForm() {
+  editingGuestId = null;
+  document.getElementById('guestFormTitle').textContent = 'Add Guest';
+  document.getElementById('gName').value = '';
+  document.getElementById('gArrival').value = '';
+  document.getElementById('gDeparture').value = '';
+  document.getElementById('gVegetarian').checked = false;
+  document.getElementById('guestFormOverlay').classList.add('visible');
+}
+
+function openEditGuestForm(id) {
+  const g = guests.find(x => x.id===id);
+  if (!g) return;
+  editingGuestId = id;
+  document.getElementById('guestFormTitle').textContent = 'Edit Guest';
+  document.getElementById('gName').value = g.name;
+  document.getElementById('gArrival').value = g.arrival;
+  document.getElementById('gDeparture').value = g.departure;
+  document.getElementById('gVegetarian').checked = !!g.vegetarian;
+  document.getElementById('guestFormOverlay').classList.add('visible');
+}
+
+function closeGuestForm() {
+  document.getElementById('guestFormOverlay').classList.remove('visible');
+  editingGuestId = null;
+}
+
+function saveGuestForm() {
+  const name = document.getElementById('gName').value.trim();
+  const arrival = document.getElementById('gArrival').value.trim();
+  const departure = document.getElementById('gDeparture').value.trim();
+  const vegetarian = document.getElementById('gVegetarian').checked;
+  if (!name||!arrival||!departure) { alert('Please fill in name, arrival date, and departure date.'); return; }
+  if (editingGuestId) {
+    const g = guests.find(x => x.id===editingGuestId);
+    if (g) { g.name=name; g.arrival=arrival; g.departure=departure; g.vegetarian=vegetarian; }
+  } else {
+    let code = randomCode();
+    while (guests.some(g => g.code === code)) code = randomCode();
+    guests.push({ id:nextGuestId(), name, arrival, departure, vegetarian, code });
+  }
+  closeGuestForm();
   renderAll();
   saveToJsonBin();
 }
 
-function deleteView(id) {
-  const v = views.find(x => x.id === id);
-  if (!v) return;
-  if (views.length <= 1) { alert('Cannot delete the last remaining view.'); return; }
-  if (!confirm('Delete the "'+v.name+'" view? Events will be removed from this view.')) return;
-  views = views.filter(x => x.id !== id);
-  events.forEach(ev => { if(ev.views) ev.views = ev.views.filter(vid => vid !== id); });
+function deleteGuest(id) {
+  const g = guests.find(x => x.id===id);
+  if (!g) return;
+  if (!confirm('Delete guest "'+g.name+'"? They will be removed from all event guest lists.')) return;
+  guests = guests.filter(x => x.id!==id);
+  /* Remove from all event guest lists and reservations */
+  events.forEach(ev => { if(ev.guestList) ev.guestList = ev.guestList.filter(gid => gid !== id); });
+  reservations.forEach(r => { if(r.guestIds) r.guestIds = r.guestIds.filter(gid => gid !== id); });
   renderAll();
   saveToJsonBin();
 }
 
-function copyViewLink(id) {
-  const url = shareUrl(id);
+function copyGuestLink(code) {
+  const url = guestShareUrl(code);
   navigator.clipboard.writeText(url).then(() => {
     showToast('Link copied!', 'success', 1500);
   }).catch(() => {
@@ -765,16 +982,21 @@ function copyViewLink(id) {
 /* ══════════════════════════════════════════════════════════════
    EVENT FORM
    ══════════════════════════════════════════════════════════════ */
-function renderFormViewChecks(selectedViews) {
-  const container = document.getElementById('formViewChecks');
-  container.innerHTML = views.map(v => {
-    const checked = selectedViews.includes(v.id) ? 'checked' : '';
-    return '<label><input type="checkbox" value="'+esc(v.id)+'" '+checked+'> '+esc(v.name)+'</label>';
+function renderFormGuestChecks(selectedGuestIds) {
+  const container = document.getElementById('formGuestChecks');
+  if (guests.length === 0) {
+    container.innerHTML = '<span class="no-guests-msg">Add guests first to assign them to events.</span>';
+    return;
+  }
+  const sorted = [...guests].sort((a,b) => a.name.localeCompare(b.name));
+  container.innerHTML = sorted.map(g => {
+    const checked = selectedGuestIds.includes(g.id) ? 'checked' : '';
+    return '<label><input type="checkbox" value="'+esc(g.id)+'" '+checked+'> '+esc(g.name)+'</label>';
   }).join('');
 }
 
-function getCheckedViews() {
-  const boxes = document.querySelectorAll('#formViewChecks input[type="checkbox"]');
+function getCheckedGuests() {
+  const boxes = document.querySelectorAll('#formGuestChecks input[type="checkbox"]');
   return Array.from(boxes).filter(cb => cb.checked).map(cb => cb.value);
 }
 
@@ -787,7 +1009,7 @@ function openAddForm() {
   document.getElementById('fLocation').value = '';
   document.getElementById('fAddress').value = '';
   document.getElementById('fTransport').value = '';
-  renderFormViewChecks(views.map(v => v.id)); /* all checked by default */
+  renderFormGuestChecks(guests.map(g => g.id)); /* all guests checked by default */
   document.getElementById('formOverlay').classList.add('visible');
 }
 
@@ -802,7 +1024,7 @@ function openEditForm(id) {
   document.getElementById('fLocation').value = ev.location;
   document.getElementById('fAddress').value = ev.address;
   document.getElementById('fTransport').value = ev.transportNote;
-  renderFormViewChecks(ev.views || []);
+  renderFormGuestChecks(ev.guestList || []);
   document.getElementById('formOverlay').classList.add('visible');
 }
 
@@ -818,15 +1040,15 @@ function saveForm() {
   const location = document.getElementById('fLocation').value.trim();
   const address = document.getElementById('fAddress').value.trim();
   const transportNote = document.getElementById('fTransport').value.trim();
-  const evViews = getCheckedViews();
+  const guestList = getCheckedGuests();
 
   if (!name||!date||!time||!location) { alert('Please fill in name, date, time, and location.'); return; }
 
   if (editingId) {
     const ev = events.find(e => e.id===editingId);
-    if (ev) { ev.name=name; ev.date=date; ev.time=time; ev.location=location; ev.address=address; ev.transportNote=transportNote; ev.views=evViews; }
+    if (ev) { ev.name=name; ev.date=date; ev.time=time; ev.location=location; ev.address=address; ev.transportNote=transportNote; ev.guestList=guestList; }
   } else {
-    events.push({ id:nextId(), name, date, time, location, address, transportNote, views:evViews });
+    events.push({ id:nextId(), name, date, time, location, address, transportNote, guestList });
   }
 
   closeForm();
@@ -845,13 +1067,139 @@ function deleteEvent(id) {
 }
 
 function resetData() {
-  if (!confirm('Reset all events to defaults? This will overwrite your current data.')) return;
+  if (!confirm('Reset all events to defaults? This will overwrite your current data and clear all guests and reservations.')) return;
   events = JSON.parse(JSON.stringify(DEFAULT_EVENTS));
-  views = JSON.parse(JSON.stringify(DEFAULT_VIEWS));
+  guests = [];
+  reservations = [];
   activeEventId = null;
   renderAll();
   saveToJsonBin();
 }
+
+/* ══════════════════════════════════════════════════════════════
+   RESERVATION MANAGEMENT
+   ══════════════════════════════════════════════════════════════ */
+function nextResId(){ return 'res'+(Math.max(0,...reservations.map(r=>{const m=r.id.match(/\d+/);return m?+m[0]:0}))+1); }
+
+function renderResGuestChecks(selectedIds) {
+  const container = document.getElementById('resGuestChecks');
+  if (guests.length === 0) {
+    container.innerHTML = '<span class="no-guests-msg">Add guests first.</span>';
+    return;
+  }
+  const sorted = [...guests].sort((a,b) => a.name.localeCompare(b.name));
+  container.innerHTML = sorted.map(g => {
+    const checked = selectedIds.includes(g.id) ? 'checked' : '';
+    const veg = g.vegetarian ? ' (veg)' : '';
+    return '<label><input type="checkbox" value="'+esc(g.id)+'" '+checked+'> '+esc(g.name)+veg+'</label>';
+  }).join('');
+}
+function getResCheckedGuests() {
+  const boxes = document.querySelectorAll('#resGuestChecks input[type="checkbox"]');
+  return Array.from(boxes).filter(cb => cb.checked).map(cb => cb.value);
+}
+
+function openAddResForm() {
+  editingResId = null;
+  document.getElementById('resFormTitle').textContent = 'Add Reservation';
+  document.getElementById('rRestaurant').value = '';
+  document.getElementById('rDate').value = '';
+  document.getElementById('rTime').value = '';
+  document.getElementById('rPartySize').value = '';
+  document.getElementById('rConfirmation').value = '';
+  document.getElementById('rPhone').value = '';
+  document.getElementById('rNotes').value = '';
+  renderResGuestChecks([]);
+  document.getElementById('resFormOverlay').classList.add('visible');
+}
+
+function openEditResForm(id) {
+  const r = reservations.find(x => x.id===id);
+  if (!r) return;
+  editingResId = id;
+  document.getElementById('resFormTitle').textContent = 'Edit Reservation';
+  document.getElementById('rRestaurant').value = r.restaurant;
+  document.getElementById('rDate').value = r.date;
+  document.getElementById('rTime').value = r.time;
+  document.getElementById('rPartySize').value = r.partySize || '';
+  document.getElementById('rConfirmation').value = r.confirmation || '';
+  document.getElementById('rPhone').value = r.contactPhone || '';
+  document.getElementById('rNotes').value = r.notes || '';
+  renderResGuestChecks(r.guestIds || []);
+  document.getElementById('resFormOverlay').classList.add('visible');
+}
+
+function closeResForm() {
+  document.getElementById('resFormOverlay').classList.remove('visible');
+  editingResId = null;
+}
+
+function saveResForm() {
+  const restaurant = document.getElementById('rRestaurant').value.trim();
+  const date = document.getElementById('rDate').value.trim();
+  const time = document.getElementById('rTime').value.trim();
+  const partySize = parseInt(document.getElementById('rPartySize').value, 10) || 0;
+  const confirmation = document.getElementById('rConfirmation').value.trim();
+  const contactPhone = document.getElementById('rPhone').value.trim();
+  const notes = document.getElementById('rNotes').value.trim();
+  const guestIds = getResCheckedGuests();
+  if (!restaurant||!date||!time) { alert('Please fill in restaurant, date, and time.'); return; }
+  if (editingResId) {
+    const r = reservations.find(x => x.id===editingResId);
+    if (r) { r.restaurant=restaurant; r.date=date; r.time=time; r.partySize=partySize; r.confirmation=confirmation; r.contactPhone=contactPhone; r.notes=notes; r.guestIds=guestIds; }
+  } else {
+    reservations.push({ id:nextResId(), restaurant, date, time, partySize, confirmation, contactPhone, notes, guestIds });
+  }
+  closeResForm();
+  renderAll();
+  saveToJsonBin();
+}
+
+function deleteRes(id) {
+  const r = reservations.find(x => x.id===id);
+  if (!r) return;
+  if (!confirm('Delete reservation at "'+r.restaurant+'"?')) return;
+  reservations = reservations.filter(x => x.id!==id);
+  renderAll();
+  saveToJsonBin();
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CONSOLE HELPER: reservationSummary()
+   ══════════════════════════════════════════════════════════════ */
+window.reservationSummary = function() {
+  if (reservations.length === 0) { console.log('No reservations.'); return; }
+  const sorted = [...reservations].sort((a,b) => parseDate(a.date) - parseDate(b.date) || parseTime(a.time) - parseTime(b.time));
+  console.log('%c Reservation Summary', 'font-size:14px;font-weight:bold;color:#6A3D9A');
+  console.log('━'.repeat(50));
+  const tableData = [];
+  sorted.forEach(r => {
+    const gNames = (r.guestIds||[]).map(gid => {
+      const g = guests.find(x => x.id === gid);
+      if (!g) return gid;
+      return g.name + (g.vegetarian ? ' (veg)' : '');
+    });
+    const vegCount = (r.guestIds||[]).reduce((n,gid) => { const g=guests.find(x=>x.id===gid); return n+(g&&g.vegetarian?1:0); }, 0);
+    console.log(
+      `%c${r.restaurant}%c — ${r.date} ${r.time}`,
+      'font-weight:bold;color:#6A3D9A', 'color:inherit'
+    );
+    console.log(`  Party: ${r.partySize||'?'} | Conf: ${r.confirmation||'N/A'} | Phone: ${r.contactPhone||'N/A'}`);
+    if (gNames.length) console.log('  Guests: ' + gNames.join(', '));
+    if (vegCount > 0) console.log('  Vegetarians: ' + vegCount);
+    if (r.notes) console.log('  Notes: ' + r.notes);
+    console.log('---');
+    tableData.push({
+      Restaurant: r.restaurant,
+      Date: r.date,
+      Time: r.time,
+      'Party Size': r.partySize || '?',
+      Vegetarians: vegCount,
+      Confirmation: r.confirmation || 'N/A'
+    });
+  });
+  console.table(tableData);
+};
 
 /* ══════════════════════════════════════════════════════════════
    RENDER ALL + INIT
@@ -859,6 +1207,8 @@ function resetData() {
 function renderAll() { renderAdmin(); renderTimeline(); }
 
 document.getElementById('formOverlay').addEventListener('click', function(e){ if(e.target===this) closeForm(); });
+document.getElementById('guestFormOverlay').addEventListener('click', function(e){ if(e.target===this) closeGuestForm(); });
+document.getElementById('resFormOverlay').addEventListener('click', function(e){ if(e.target===this) closeResForm(); });
 
 (async function init() {
   await fetchEvents();

@@ -403,6 +403,26 @@ body{
   background:var(--light-lavender);color:var(--deep-purple);
 }
 
+/* ─── Task cards ─── */
+.admin-tasks{display:flex;flex-direction:column;gap:.6rem}
+.admin-task-card{
+  background:#fff;border-radius:8px;padding:.9rem 1rem;
+  box-shadow:0 1px 5px rgba(0,0,0,.05);border:1px solid #e8e4ec;
+}
+.at-top{display:flex;justify-content:space-between;align-items:flex-start;gap:.6rem;flex-wrap:wrap}
+.at-name{font-family:'Playfair Display',serif;font-weight:600;font-size:1rem;color:var(--charcoal)}
+.at-detail{font-size:.82rem;color:#555;margin-top:.25rem;line-height:1.45}
+.at-meta{font-size:.78rem;color:#777;margin-top:.2rem;line-height:1.4}
+.at-notes{font-size:.78rem;color:#777;margin-top:.15rem;font-style:italic;line-height:1.4}
+.at-actions{display:flex;gap:.35rem;flex-shrink:0}
+.at-status{
+  display:inline-block;font-size:.68rem;font-weight:700;padding:.2rem .55rem;
+  border-radius:10px;margin-top:.3rem;text-transform:uppercase;letter-spacing:.02em;
+}
+.at-status.completed{background:#e0f0e4;color:#3d7a4a}
+.at-status.in-progress{background:#fef3cd;color:#856404}
+.at-status.not-started{background:#f0e8f5;color:#6A3D9A}
+
 /* Toast */
 .toast{
   position:fixed;top:16px;right:16px;
@@ -657,6 +677,41 @@ body{
   </div>
 </div>
 
+<!-- Task form modal -->
+<div class="admin-form-overlay" id="taskFormOverlay">
+  <div class="admin-form">
+    <h3 id="taskFormTitle">Add Task</h3>
+    <div class="field">
+      <label for="tName">Task Name</label>
+      <input id="tName" type="text" placeholder="e.g. Order flowers">
+    </div>
+    <div class="field">
+      <label for="tDetail">Detail</label>
+      <textarea id="tDetail" placeholder="What needs to be done..."></textarea>
+    </div>
+    <div class="field">
+      <label for="tAssigned">Assigned To</label>
+      <input id="tAssigned" type="text" placeholder="e.g. Pari">
+    </div>
+    <div class="field">
+      <label for="tNotes">Notes</label>
+      <textarea id="tNotes" placeholder="Any extra notes..."></textarea>
+    </div>
+    <div class="field">
+      <label for="tStatus">Status</label>
+      <select id="tStatus" style="width:100%;padding:.5rem .7rem;border:1.5px solid #ddd;border-radius:6px;font-family:'Lato',sans-serif;font-size:.88rem;background:#fff;cursor:pointer">
+        <option value="not-started">Not Started</option>
+        <option value="in-progress">In Progress</option>
+        <option value="completed">Completed</option>
+      </select>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-secondary" onclick="closeTaskForm()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveTaskForm()">Save</button>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ══════════════════════════════════════════════════════════════
    JSONBIN CONFIG
@@ -689,10 +744,12 @@ const guestCode = params.get('guest'); /* null = show all events */
 let events = [];
 let guests = [];
 let reservations = [];
+let tasks = [];
 let groups = []; /* Array of strings, e.g. ["Family", "Friends"] */
 let editingId = null;
 let editingGuestId = null;
 let editingResId = null;
+let editingTaskId = null;
 let activeEventId = null;
 let usingFallback = false;
 let collapsedAdminGroups = new Set(); /* Tracks which admin guest groups are collapsed */
@@ -714,12 +771,14 @@ async function fetchEvents() {
       events = record.map(e => ({ ...e, guestList: e.guestList || [] }));
       guests = [];
       reservations = [];
+      tasks = [];
       groups = [];
       if (isAdmin) await saveToJsonBin(true);
     } else {
       events = (record.events || []).map(e => ({ ...e, guestList: e.guestList || [] }));
       guests = (record.guests || []).map(g => ({ ...g, code: g.code || randomCode(), vegetarian: g.vegetarian || false, group: g.group || '' }));
       reservations = record.reservations || [];
+      tasks = record.tasks || [];
       groups = record.groups || [];
     }
     /* Strip legacy views field from events */
@@ -730,6 +789,7 @@ async function fetchEvents() {
     events = JSON.parse(JSON.stringify(DEFAULT_EVENTS));
     guests = [];
     reservations = [];
+    tasks = [];
     groups = [];
     usingFallback = true;
   }
@@ -741,7 +801,7 @@ async function saveToJsonBin(silent) {
     const res = await fetch(JSONBIN_API_URL, {
       method: 'PUT',
       headers: { 'Content-Type':'application/json', 'X-Master-Key': JSONBIN_API_KEY },
-      body: JSON.stringify({ events, guests, reservations, groups })
+      body: JSON.stringify({ events, guests, reservations, tasks, groups })
     });
     if (!res.ok) throw new Error('Save failed');
     if (!silent) showToast('Saved \u2713', 'success', 2000);
@@ -1012,6 +1072,30 @@ function renderAdmin() {
     h += '</div></div></div>';
   });
   if (reservations.length===0) h += '<p style="color:#999;text-align:center;padding:.6rem;font-size:.85rem">No reservations yet.</p>';
+  h += '</div>';
+
+  /* ─── Tasks section ─── */
+  h += '<div class="admin-section-title" style="margin-top:1.5rem">Tasks ('+tasks.length+')</div>';
+  h += '<div class="admin-bar">';
+  h += '<button class="btn btn-primary btn-sm" onclick="openAddTaskForm()">&#xFF0B; Add Task</button>';
+  h += '</div>';
+  h += '<div class="admin-tasks">';
+  const statusOrder = {'in-progress':0,'not-started':1,'completed':2};
+  const sortedTasks = [...tasks].sort((a,b) => (statusOrder[a.status]||1) - (statusOrder[b.status]||1));
+  sortedTasks.forEach(t => {
+    const statusLabel = t.status === 'completed' ? 'Completed' : t.status === 'in-progress' ? 'In Progress' : 'Not Started';
+    h += '<div class="admin-task-card"><div class="at-top"><div>';
+    h += '<div class="at-name">'+esc(t.name)+'</div>';
+    if (t.detail) h += '<div class="at-detail">'+esc(t.detail)+'</div>';
+    if (t.assignedTo) h += '<div class="at-meta">Assigned to: <strong>'+esc(t.assignedTo)+'</strong></div>';
+    if (t.notes) h += '<div class="at-notes">'+esc(t.notes)+'</div>';
+    h += '<span class="at-status '+esc(t.status)+'">'+statusLabel+'</span>';
+    h += '</div><div class="at-actions">';
+    h += '<button class="btn btn-secondary btn-sm" onclick="openEditTaskForm(\''+t.id+'\')">Edit</button>';
+    h += '<button class="btn btn-danger btn-sm" onclick="deleteTask(\''+t.id+'\')">Delete</button>';
+    h += '</div></div></div>';
+  });
+  if (tasks.length===0) h += '<p style="color:#999;text-align:center;padding:.6rem;font-size:.85rem">No tasks yet.</p>';
   h += '</div>';
 
   /* ─── Events section ─── */
@@ -1322,6 +1406,7 @@ function resetData() {
   events = JSON.parse(JSON.stringify(DEFAULT_EVENTS));
   guests = [];
   reservations = [];
+  tasks = [];
   groups = [];
   activeEventId = null;
   renderAll();
@@ -1430,6 +1515,67 @@ function deleteRes(id) {
 }
 
 /* ══════════════════════════════════════════════════════════════
+   TASK MANAGEMENT
+   ══════════════════════════════════════════════════════════════ */
+function nextTaskId(){ return 'task'+(Math.max(0,...tasks.map(t=>{const m=t.id.match(/\d+/);return m?+m[0]:0}))+1); }
+
+function openAddTaskForm() {
+  editingTaskId = null;
+  document.getElementById('taskFormTitle').textContent = 'Add Task';
+  document.getElementById('tName').value = '';
+  document.getElementById('tDetail').value = '';
+  document.getElementById('tAssigned').value = '';
+  document.getElementById('tNotes').value = '';
+  document.getElementById('tStatus').value = 'not-started';
+  document.getElementById('taskFormOverlay').classList.add('visible');
+}
+
+function openEditTaskForm(id) {
+  const t = tasks.find(x => x.id===id);
+  if (!t) return;
+  editingTaskId = id;
+  document.getElementById('taskFormTitle').textContent = 'Edit Task';
+  document.getElementById('tName').value = t.name;
+  document.getElementById('tDetail').value = t.detail || '';
+  document.getElementById('tAssigned').value = t.assignedTo || '';
+  document.getElementById('tNotes').value = t.notes || '';
+  document.getElementById('tStatus').value = t.status || 'not-started';
+  document.getElementById('taskFormOverlay').classList.add('visible');
+}
+
+function closeTaskForm() {
+  document.getElementById('taskFormOverlay').classList.remove('visible');
+  editingTaskId = null;
+}
+
+function saveTaskForm() {
+  const name = document.getElementById('tName').value.trim();
+  const detail = document.getElementById('tDetail').value.trim();
+  const assignedTo = document.getElementById('tAssigned').value.trim();
+  const notes = document.getElementById('tNotes').value.trim();
+  const status = document.getElementById('tStatus').value;
+  if (!name) { alert('Please enter a task name.'); return; }
+  if (editingTaskId) {
+    const t = tasks.find(x => x.id===editingTaskId);
+    if (t) { t.name=name; t.detail=detail; t.assignedTo=assignedTo; t.notes=notes; t.status=status; }
+  } else {
+    tasks.push({ id:nextTaskId(), name, detail, assignedTo, notes, status });
+  }
+  closeTaskForm();
+  renderAll();
+  saveToJsonBin();
+}
+
+function deleteTask(id) {
+  const t = tasks.find(x => x.id===id);
+  if (!t) return;
+  if (!confirm('Delete task "'+t.name+'"?')) return;
+  tasks = tasks.filter(x => x.id!==id);
+  renderAll();
+  saveToJsonBin();
+}
+
+/* ══════════════════════════════════════════════════════════════
    CONSOLE HELPER: reservationSummary()
    ══════════════════════════════════════════════════════════════ */
 window.reservationSummary = function() {
@@ -1474,6 +1620,7 @@ function renderAll() { renderAdmin(); renderTimeline(); }
 document.getElementById('formOverlay').addEventListener('click', function(e){ if(e.target===this) closeForm(); });
 document.getElementById('guestFormOverlay').addEventListener('click', function(e){ if(e.target===this) closeGuestForm(); });
 document.getElementById('resFormOverlay').addEventListener('click', function(e){ if(e.target===this) closeResForm(); });
+document.getElementById('taskFormOverlay').addEventListener('click', function(e){ if(e.target===this) closeTaskForm(); });
 
 (async function init() {
   await fetchEvents();

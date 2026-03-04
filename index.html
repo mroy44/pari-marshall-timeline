@@ -767,6 +767,7 @@ function showToast(msg, type, autoHide) {
    HELPERS
    ══════════════════════════════════════════════════════════════ */
 function esc(s){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+function escJs(s){ return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
 function parseDate(s){ const [m,d,y]=s.split('/').map(Number); return new Date(y,m-1,d); }
 function parseTime(t){
   const m=t.match(/(\d+):(\d+)\s*(AM|PM)/i); if(!m) return 0;
@@ -936,7 +937,7 @@ function renderAdmin() {
       if (members.length === 0) return;
       const col = collapsedAdminGroups.has(grp) ? ' collapsed' : '';
       h += '<div class="ag-group'+col+'">';
-      h += '<div class="ag-group-header" onclick="toggleAdminGroup(this,\''+esc(grp)+'\')">';
+      h += '<div class="ag-group-header" onclick="toggleAdminGroup(this,\''+escJs(grp)+'\')">';
       h += '<span class="ag-group-chevron">&#x25BE;</span>';
       h += '<span class="ag-group-name">'+esc(grp)+'</span>';
       h += '<span class="ag-group-count">'+members.length+' guest'+(members.length!==1?'s':'')+'</span>';
@@ -1231,7 +1232,7 @@ function renderFormGuestChecks(selectedGuestIds) {
     html += '<button type="button" class="bulk-group-btn" onclick="toggleGroupChecks(\'formGuestChecks\',\'__all__\')">All</button>';
     html += '<button type="button" class="bulk-group-btn" onclick="toggleGroupChecks(\'formGuestChecks\',\'__none__\')">None</button>';
     groups.forEach(grp => {
-      html += '<button type="button" class="bulk-group-btn" onclick="toggleGroupChecks(\'formGuestChecks\',\''+esc(grp)+'\')">'+esc(grp)+'</button>';
+      html += '<button type="button" class="bulk-group-btn" onclick="toggleGroupChecks(\'formGuestChecks\',\''+escJs(grp)+'\')">'+esc(grp)+'</button>';
     });
     html += '</div>';
     html += buildGuestAccordions(selectedGuestIds, false);
@@ -1344,7 +1345,7 @@ function renderResGuestChecks(selectedIds) {
     html += '<button type="button" class="bulk-group-btn" onclick="toggleGroupChecks(\'resGuestChecks\',\'__all__\')">All</button>';
     html += '<button type="button" class="bulk-group-btn" onclick="toggleGroupChecks(\'resGuestChecks\',\'__none__\')">None</button>';
     groups.forEach(grp => {
-      html += '<button type="button" class="bulk-group-btn" onclick="toggleGroupChecks(\'resGuestChecks\',\''+esc(grp)+'\')">'+esc(grp)+'</button>';
+      html += '<button type="button" class="bulk-group-btn" onclick="toggleGroupChecks(\'resGuestChecks\',\''+escJs(grp)+'\')">'+esc(grp)+'</button>';
     });
     html += '</div>';
     html += buildGuestAccordions(selectedIds, true);

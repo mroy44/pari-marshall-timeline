@@ -596,7 +596,7 @@ function sortEvents(a){ return a.sort((x,y)=>{ const dx=parseDate(x.date),dy=par
 function isEventPast(ev){ const d=parseDate(ev.date); const m=parseTime(ev.time); d.setHours(Math.floor(m/60),m%60,0,0); return new Date()>d; }
 function mapsUrl(a){ return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(a); }
 function nextId(){ return 'evt'+(Math.max(0,...events.map(e=>{const m=e.id.match(/\d+/);return m?+m[0]:0}))+1); }
-function slugify(s){ return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); }
+function randomCode(){ const c='abcdefghijklmnopqrstuvwxyz0123456789'; let s=''; for(let i=0;i<6;i++) s+=c[Math.floor(Math.random()*c.length)]; return s; }
 function shareUrl(viewId){
   const base = window.location.origin + window.location.pathname;
   return base + '?view=' + encodeURIComponent(viewId);
@@ -735,8 +735,8 @@ function addView() {
   const input = document.getElementById('newViewName');
   const name = input.value.trim();
   if (!name) { input.focus(); return; }
-  const id = slugify(name);
-  if (views.some(v => v.id === id)) { alert('A view with that name already exists.'); return; }
+  let id = randomCode();
+  while (views.some(v => v.id === id)) id = randomCode();
   views.push({ id, name });
   renderAll();
   saveToJsonBin();

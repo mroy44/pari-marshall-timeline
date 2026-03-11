@@ -499,6 +499,65 @@ body{
 .preview-label span{font-weight:300;font-size:.82rem;color:#888;display:block;margin-top:.1rem}
 
 /* ════════════════════════════════
+   GUEST WELCOME / INSTRUCTIONS
+   ════════════════════════════════ */
+.guest-welcome{
+  max-width:700px;margin:0 auto;
+  padding:0 1.5rem;
+}
+.welcome-card{
+  background:#fff;border-radius:12px;
+  padding:1.2rem 1.3rem;
+  box-shadow:var(--card-shadow);
+  border:1px solid var(--light-lavender);
+  text-align:center;
+  margin-bottom:.4rem;
+}
+.welcome-name{
+  font-family:'Playfair Display',serif;
+  font-size:1.15rem;font-weight:600;
+  color:var(--deep-purple);margin-bottom:.15rem;
+}
+.welcome-sub{
+  font-size:.85rem;color:#777;line-height:1.5;
+}
+.how-to{
+  background:var(--light-lavender);border-radius:10px;
+  padding:.85rem 1.1rem;
+  margin-top:.1rem;
+}
+.how-to-title{
+  font-family:'Playfair Display',serif;
+  font-size:.88rem;font-weight:600;
+  color:var(--deep-purple);margin-bottom:.45rem;
+  display:flex;align-items:center;justify-content:center;gap:.35rem;
+}
+.how-to-title svg{width:15px;height:15px;flex-shrink:0}
+.how-to-steps{
+  list-style:none;padding:0;margin:0;
+  text-align:left;
+}
+.how-to-steps li{
+  font-size:.8rem;color:#555;line-height:1.5;
+  padding:.2rem 0;padding-left:1.3rem;
+  position:relative;
+}
+.how-to-steps li::before{
+  content:attr(data-step);
+  position:absolute;left:0;top:.2rem;
+  width:1rem;height:1rem;
+  background:var(--deep-purple);color:#fff;
+  font-size:.6rem;font-weight:700;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+}
+.how-to-steps li strong{color:var(--deep-purple)}
+@media(max-width:500px){
+  .guest-welcome{padding:0 .8rem}
+  .welcome-card{padding:1rem}
+}
+
+/* ════════════════════════════════
    RESPONSIVE
    ════════════════════════════════ */
 @media(max-width:500px){
@@ -539,6 +598,8 @@ body{
     <img src="images/purple-lavender-flowers-border-design-element-png.webp" alt="">
   </div>
 </header>
+
+<div class="guest-welcome" id="guestWelcome" style="display:none"></div>
 
 <main class="timeline-wrap" id="timelineWrap">
   <div class="loader" id="loader"><div class="spin"></div><p>Loading events&hellip;</p></div>
@@ -1601,7 +1662,41 @@ window.reservationSummary = function() {
 /* ══════════════════════════════════════════════════════════════
    RENDER ALL + INIT
    ══════════════════════════════════════════════════════════════ */
-function renderAll() { renderAdmin(); renderTimeline(); }
+function renderGuestWelcome() {
+  const el = document.getElementById('guestWelcome');
+  if (isAdmin) { el.style.display = 'none'; return; }
+
+  const g = guestCode ? findGuestByCode(guestCode) : null;
+  const name = g ? g.name : null;
+  const evCount = g ? getFilteredEvents().length : events.length;
+
+  let h = '<div class="welcome-card">';
+  if (name) {
+    h += '<div class="welcome-name">Welcome, '+esc(name)+'!</div>';
+    h += '<div class="welcome-sub">Here\u2019s your personalized schedule for the celebration weekend. You\u2019re part of <strong>'+evCount+' event'+(evCount!==1?'s':'')+'</strong>.</div>';
+  } else if (guestCode) {
+    h += '<div class="welcome-name">Welcome!</div>';
+    h += '<div class="welcome-sub">We couldn\u2019t match your link to a guest. Please text us for an updated link.</div>';
+  } else {
+    h += '<div class="welcome-name">Celebration Weekend</div>';
+    h += '<div class="welcome-sub">Here\u2019s the full schedule for the weekend. Tap any event below to see the details.</div>';
+  }
+  h += '</div>';
+
+  h += '<div class="how-to">';
+  h += '<div class="how-to-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>How to Use This Page</div>';
+  h += '<ol class="how-to-steps">';
+  h += '<li data-step="1"><strong>Tap an event</strong> to expand it and see location, directions, and details.</li>';
+  h += '<li data-step="2"><strong>Tap the location name</strong> inside an event to open it in <strong>Google Maps</strong>.</li>';
+  h += '<li data-step="3">Events that have already passed will appear <strong>faded with a strikethrough</strong>.</li>';
+  h += '<li data-step="4"><strong>Bookmark this page</strong> or save the link \u2014 it updates automatically if plans change.</li>';
+  h += '</ol></div>';
+
+  el.innerHTML = h;
+  el.style.display = 'block';
+}
+
+function renderAll() { renderAdmin(); renderGuestWelcome(); renderTimeline(); }
 
 document.getElementById('formOverlay').addEventListener('click', function(e){ if(e.target===this) closeForm(); });
 document.getElementById('guestFormOverlay').addEventListener('click', function(e){ if(e.target===this) closeGuestForm(); });

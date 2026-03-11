@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pari &amp; Marshall — Wedding Ceremony</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --lavender:#B497D6;
+  --deep-purple:#6A3D9A;
+  --sage:#7A8B6F;
+  --offwhite:#FAF9F6;
+  --charcoal:#2D2D2D;
+  --light-lavender:#E8D8F5;
+  --card-shadow:0 2px 12px rgba(106,61,154,.12);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Lato',sans-serif;
+  background:var(--offwhite);
+  color:var(--charcoal);
+  line-height:1.6;
+  min-height:100vh;
+  display:flex;flex-direction:column;
+}
+
+/* ════════════════════════════════
+   HERO
+   ════════════════════════════════ */
+.hero{
+  background:linear-gradient(160deg,#f8f0ff 0%,#eedcf7 30%,#e4cbf0 60%,#dbbee9 100%);
+  text-align:center;
+  padding:1.4rem 1.5rem 0;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 40%,rgba(255,255,255,.5) 0%,transparent 65%);
+  pointer-events:none;
+}
+.hero h1{
+  font-family:'Playfair Display',serif;
+  font-weight:700;font-size:clamp(1.6rem,4.5vw,2.4rem);
+  color:var(--deep-purple);letter-spacing:.02em;
+  position:relative;z-index:1;
+}
+.hero .ampersand{
+  font-style:italic;font-weight:400;
+  display:inline-block;margin:0 .12em;opacity:.75;
+}
+.hero .subtitle{
+  font-family:'Lato',sans-serif;
+  font-size:clamp(.78rem,2vw,.95rem);
+  color:#5a3d7a;margin-top:.2rem;
+  font-weight:300;letter-spacing:.08em;
+  text-transform:uppercase;position:relative;z-index:1;
+}
+.hero-bouquet{
+  display:block;margin:.5rem auto .3rem;
+  width:clamp(120px,25vw,180px);height:auto;
+  position:relative;z-index:1;opacity:.8;
+}
+.hero-border{
+  display:block;width:100%;margin-top:.2rem;
+  position:relative;z-index:1;margin-bottom:-2px;
+}
+.hero-border img{
+  display:block;width:100%;
+  height:clamp(30px,5vw,50px);
+  object-fit:cover;object-position:top center;
+}
+
+/* ════════════════════════════════
+   FLYER CONTENT
+   ════════════════════════════════ */
+.flyer-content{
+  flex:1;
+  max-width:620px;margin:0 auto;
+  padding:2.5rem 1.5rem 2rem;
+  text-align:center;
+}
+
+/* Ornamental divider */
+.ornament{
+  display:flex;align-items:center;gap:.7rem;
+  margin:0 auto 1.8rem;max-width:280px;
+}
+.ornament::before,.ornament::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(90deg,transparent,var(--lavender),transparent);
+}
+.ornament span{
+  font-family:'Playfair Display',serif;
+  font-size:1.3rem;color:var(--lavender);font-style:italic;
+}
+
+.ceremony-badge{
+  display:inline-block;
+  font-family:'Lato',sans-serif;font-size:.72rem;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--deep-purple);background:var(--light-lavender);
+  padding:.35rem 1rem;border-radius:20px;
+  margin-bottom:1rem;
+}
+
+.ceremony-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.6rem,5vw,2.2rem);
+  font-weight:700;color:var(--deep-purple);
+  margin-bottom:.3rem;line-height:1.25;
+}
+.ceremony-couple{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.1rem,3.5vw,1.5rem);
+  font-weight:400;font-style:italic;
+  color:#7b5aa6;margin-bottom:1.6rem;
+}
+
+/* Details card */
+.details-card{
+  background:#fff;border-radius:14px;
+  padding:1.6rem 1.4rem;
+  box-shadow:var(--card-shadow);
+  border:1px solid var(--light-lavender);
+  text-align:left;
+  margin-bottom:1.8rem;
+  position:relative;overflow:hidden;
+}
+.details-card::after{
+  content:'';position:absolute;right:8px;bottom:6px;
+  width:50px;height:80px;
+  background:url('images/watercolor-lavender-pressed-dried-flowers-illustration-png.webp') no-repeat center center;
+  background-size:contain;opacity:.1;pointer-events:none;
+}
+
+.detail-row{
+  display:flex;align-items:flex-start;gap:.75rem;
+  margin-bottom:1rem;position:relative;z-index:1;
+}
+.detail-row:last-child{margin-bottom:0}
+.detail-icon{
+  flex-shrink:0;width:36px;height:36px;
+  background:var(--light-lavender);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--deep-purple);
+}
+.detail-icon svg{width:18px;height:18px}
+.detail-label{
+  font-size:.72rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:.08em;
+  color:var(--deep-purple);margin-bottom:.1rem;
+}
+.detail-value{
+  font-size:.95rem;color:var(--charcoal);line-height:1.45;
+}
+.detail-value a{
+  color:var(--deep-purple);text-decoration:underline;
+  text-underline-offset:2px;transition:color .2s;
+}
+.detail-value a:hover{color:#8b5fc7}
+
+/* Map link button */
+.map-btn{
+  display:inline-flex;align-items:center;gap:.4rem;
+  font-family:'Lato',sans-serif;font-size:.8rem;font-weight:600;
+  color:var(--deep-purple);background:var(--light-lavender);
+  border:1.5px solid var(--lavender);border-radius:20px;
+  padding:.35rem .9rem;text-decoration:none;
+  margin-top:.35rem;transition:background .2s,transform .15s;
+}
+.map-btn:hover{background:#dcc8ef;transform:translateY(-1px)}
+.map-btn svg{width:14px;height:14px}
+
+/* ════════════════════════════════
+   TIMELINE LOOKUP
+   ════════════════════════════════ */
+.lookup-section{
+  background:#fff;border-radius:14px;
+  padding:1.6rem 1.4rem;
+  box-shadow:var(--card-shadow);
+  border:1px solid var(--light-lavender);
+  text-align:center;
+  margin-bottom:1.5rem;
+}
+.lookup-title{
+  font-family:'Playfair Display',serif;
+  font-size:1.1rem;font-weight:600;
+  color:var(--deep-purple);margin-bottom:.25rem;
+}
+.lookup-sub{
+  font-size:.85rem;color:#777;margin-bottom:1rem;
+}
+.lookup-form{
+  display:flex;gap:.5rem;max-width:380px;margin:0 auto;
+}
+.lookup-input{
+  flex:1;padding:.55rem .8rem;
+  border:1.5px solid #ddd;border-radius:8px;
+  font-family:'Lato',sans-serif;font-size:.9rem;
+  transition:border-color .2s,box-shadow .2s;
+}
+.lookup-input:focus{
+  outline:none;border-color:var(--lavender);
+  box-shadow:0 0 0 3px rgba(180,151,214,.2);
+}
+.lookup-btn{
+  font-family:'Lato',sans-serif;font-size:.85rem;font-weight:600;
+  color:#fff;background:var(--deep-purple);
+  border:none;border-radius:8px;padding:.55rem 1.2rem;
+  cursor:pointer;white-space:nowrap;
+  transition:background .2s,transform .15s,box-shadow .2s;
+  box-shadow:0 2px 8px rgba(106,61,154,.25);
+}
+.lookup-btn:hover{background:#7d4db8;transform:translateY(-1px);box-shadow:0 4px 14px rgba(106,61,154,.35)}
+.lookup-btn:active{transform:scale(.97)}
+
+.lookup-result{
+  margin-top:.8rem;font-size:.88rem;
+  min-height:1.4rem;
+}
+.lookup-result a{
+  color:var(--deep-purple);font-weight:600;
+  text-decoration:underline;text-underline-offset:2px;
+}
+.lookup-result .error{color:#c44}
+.lookup-result .success{color:#4a9a5b}
+
+/* ════════════════════════════════
+   CONTACT BAR
+   ════════════════════════════════ */
+.contact-bar{
+  text-align:center;padding:1rem 1rem 1.5rem;
+  max-width:620px;margin:0 auto;
+}
+.contact-bar p{font-size:.88rem;color:#777;margin-bottom:.5rem}
+.btn-text-us{
+  display:inline-flex;align-items:center;gap:.4rem;
+  font-family:'Lato',sans-serif;font-size:.9rem;font-weight:600;
+  color:#fff;background:var(--deep-purple);
+  border:none;border-radius:28px;padding:.6rem 1.5rem;
+  text-decoration:none;
+  transition:background .2s,transform .15s,box-shadow .2s;
+  box-shadow:0 2px 10px rgba(106,61,154,.25);
+}
+.btn-text-us:hover{background:#7d4db8;transform:translateY(-1px);box-shadow:0 4px 16px rgba(106,61,154,.35)}
+.btn-text-us:active{transform:scale(.97)}
+
+/* ════════════════════════════════
+   FOOTER
+   ════════════════════════════════ */
+.footer-floral{width:100%;overflow:hidden;margin-top:auto}
+.footer-floral img{
+  display:block;width:100%;
+  height:clamp(40px,8vw,75px);
+  object-fit:cover;object-position:bottom center;
+  opacity:.4;transform:rotate(180deg);
+}
+.footer-sprig{display:block;margin:0 auto;width:35px;height:auto;opacity:.4}
+.footer{text-align:center;padding:.6rem 1rem 1.5rem;font-size:.75rem;color:#aaa}
+
+/* ════════════════════════════════
+   RESPONSIVE
+   ════════════════════════════════ */
+@media(max-width:500px){
+  .hero{padding:1rem .8rem 0}
+  .hero h1{font-size:1.4rem}
+  .hero-bouquet{width:100px}
+  .hero-border img{height:22px}
+  .flyer-content{padding:1.8rem .9rem 1.5rem}
+  .details-card{padding:1.2rem 1rem}
+  .lookup-form{flex-direction:column}
+  .lookup-btn{width:100%}
+  .detail-row{gap:.6rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <h1>Pari <span class="ampersand">&amp;</span> Marshall</h1>
+  <p class="subtitle">Wedding Ceremony</p>
+  <img class="hero-bouquet"
+       src="images/elegant-watercolor-illustration-of-lavender-flowers-blooming-with-detailed-foliage-on-dark-png.webp"
+       alt="Lavender bouquet divider">
+  <div class="hero-border">
+    <img src="images/purple-lavender-flowers-border-design-element-png.webp" alt="">
+  </div>
+</header>
+
+<div class="flyer-content">
+
+  <div class="ornament"><span>&hearts;</span></div>
+
+  <div class="ceremony-badge">You&rsquo;re Invited</div>
+  <h2 class="ceremony-title">Wedding Ceremony</h2>
+  <p class="ceremony-couple">Pari <span class="ampersand">&amp;</span> Marshall</p>
+
+  <!-- Details Card -->
+  <div class="details-card">
+
+    <!-- Date -->
+    <div class="detail-row">
+      <div class="detail-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </div>
+      <div>
+        <div class="detail-label">Date</div>
+        <div class="detail-value">Friday, March 13, 2026</div>
+      </div>
+    </div>
+
+    <!-- Time -->
+    <div class="detail-row">
+      <div class="detail-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div>
+        <div class="detail-label">Time</div>
+        <div class="detail-value">10:30 AM</div>
+      </div>
+    </div>
+
+    <!-- Location -->
+    <div class="detail-row">
+      <div class="detail-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </div>
+      <div>
+        <div class="detail-label">Location</div>
+        <div class="detail-value">
+          Four Winds &mdash; Floor 20, Community Room<br>
+          210 Baronne St, New Orleans, LA 70112
+        </div>
+        <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=210+Baronne+St%2C+New+Orleans%2C+LA+70112" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          View on Google Maps
+        </a>
+      </div>
+    </div>
+
+    <!-- Parking -->
+    <div class="detail-row">
+      <div class="detail-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      </div>
+      <div>
+        <div class="detail-label">Parking &amp; Arrival</div>
+        <div class="detail-value">Parking available at the Four Winds complex. Rideshare is also a great option &mdash; drop-off at 210 Baronne St.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Timeline Lookup -->
+  <div class="lookup-section">
+    <h3 class="lookup-title">Get Your Weekend Timeline</h3>
+    <p class="lookup-sub">Enter your name below to get a personalized link with all the events you&rsquo;re invited to.</p>
+    <div class="lookup-form">
+      <input class="lookup-input" id="nameInput" type="text" placeholder="Enter your full name&hellip;" autocomplete="name">
+      <button class="lookup-btn" id="lookupBtn" onclick="lookupGuest()">Get My Link</button>
+    </div>
+    <div class="lookup-result" id="lookupResult"></div>
+  </div>
+
+  <div class="contact-bar">
+    <p>Questions? We&rsquo;d love to hear from you.</p>
+    <a class="btn-text-us" href="sms:9857732964">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Text Us
+    </a>
+  </div>
+
+</div>
+
+<div class="footer-floral">
+  <img src="images/seamless-floral-background-isolated-on-a-white-background-illustration-horizontally-repeatable-free-vector.webp" alt="">
+</div>
+<img class="footer-sprig" src="images/watercolor-lavender-pressed-dried-flowers-illustration-png.webp" alt="" aria-hidden="true">
+<footer class="footer">&copy; 2026 Pari &amp; Marshall</footer>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   JSONBIN CONFIG (same as main site)
+   ══════════════════════════════════════════════════════════════ */
+const JSONBIN_BIN_ID = "69a79396d0ea881f40ec7b82";
+const JSONBIN_API_KEY = "$2a$10$VXKTGAUozJ29WIpXuKfZVOK.5l4qu3oMlgJa9pgPgzU3SpFM4kGh2";
+const JSONBIN_API_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
+
+let guests = [];
+
+async function loadGuests() {
+  try {
+    const res = await fetch(`${JSONBIN_API_URL}/latest`, {
+      headers: { "X-Master-Key": JSONBIN_API_KEY }
+    });
+    if (!res.ok) throw new Error('Fetch failed');
+    const data = await res.json();
+    const record = data.record;
+    guests = Array.isArray(record) ? [] : (record.guests || []);
+  } catch (e) {
+    console.warn('Could not load guest list:', e);
+    guests = [];
+  }
+}
+
+function guestShareUrl(code) {
+  /* Build URL pointing to the main timeline page */
+  const base = window.location.href.replace(/ceremony\.html.*$/, 'index.html');
+  return base + '?guest=' + encodeURIComponent(code);
+}
+
+function lookupGuest() {
+  const input = document.getElementById('nameInput').value.trim();
+  const result = document.getElementById('lookupResult');
+
+  if (!input) {
+    result.innerHTML = '<span class="error">Please enter your name.</span>';
+    return;
+  }
+
+  if (guests.length === 0) {
+    result.innerHTML = '<span class="error">Guest list is loading &mdash; please try again in a moment.</span>';
+    return;
+  }
+
+  /* Case-insensitive partial match */
+  const needle = input.toLowerCase();
+  const matches = guests.filter(g => g.name.toLowerCase().includes(needle));
+
+  if (matches.length === 0) {
+    result.innerHTML = '<span class="error">We couldn&rsquo;t find that name. Please check the spelling or text us for help.</span>';
+  } else if (matches.length === 1) {
+    const g = matches[0];
+    const url = guestShareUrl(g.code);
+    result.innerHTML = '<span class="success">Found you, ' + escHtml(g.name) + '!</span><br><a href="' + escAttr(url) + '">View Your Personalized Timeline &rarr;</a>';
+  } else {
+    /* Multiple matches — let the user pick */
+    let html = '<span class="success">We found multiple matches:</span><br>';
+    matches.forEach(g => {
+      const url = guestShareUrl(g.code);
+      html += '<a href="' + escAttr(url) + '" style="display:inline-block;margin:.3rem .2rem">' + escHtml(g.name) + ' &rarr;</a><br>';
+    });
+    result.innerHTML = html;
+  }
+}
+
+/* Allow Enter key to submit */
+document.getElementById('nameInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') lookupGuest();
+});
+
+function escHtml(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+function escAttr(s) { return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* Load guests on page load */
+loadGuests();
+</script>
+</body>
+</html>

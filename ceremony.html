@@ -431,7 +431,7 @@ function lookupGuest() {
   const matches = guests.filter(g => g.name.toLowerCase().includes(needle));
 
   if (matches.length === 0) {
-    result.innerHTML = '<span class="error">We couldn&rsquo;t find that name. Please check the spelling or text us for help.</span>';
+    result.innerHTML = '<span class="error">We couldn&rsquo;t find that name. Double-check your spelling, or text Marshall at <a href="sms:9857732964" style="color:var(--deep-purple);font-weight:600">(985) 773-2964</a> to get a link created for you.</span>';
   } else if (matches.length === 1) {
     const g = matches[0];
     const url = guestShareUrl(g.code);
